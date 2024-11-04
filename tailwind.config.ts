@@ -9,8 +9,17 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        brandBrick: "#b22222",
+        brandBeige: "#fcfaee",
+        brandBlue: {
+          light: "#507687",
+          dark: "#384b6f",
+        },
+        brandDark: "#1a2227",
+      },
+      fontFamily: {
+        geist: ["Geist", "sans-serif"],
+        geistMono: ["Geist Mono", "monospace"],
       },
     },
   },

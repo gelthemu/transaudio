@@ -1,0 +1,16 @@
+{
+  "functions": {
+    "app/actions.ts": {
+      "memory": 1024
+    },
+    "app/*.ts": {
+      "memory": 1024
+    },
+    "app/api/audio/upload/route.ts": {
+      "memory": 1024
+    },
+    "src/app/*.{ts,tsx}": {
+      "memory": 1024
+    }
+  }
+}

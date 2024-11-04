@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Geist";
+  src: url("/fonts/GeistVF.woff") format("woff");
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Geist Mono";
+  src: url("/fonts/GeistMonoVF.woff") format("woff");
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: normal;
+}
+*,
+html {
+  scroll-behavior: smooth;
+}
+::-webkit-scrollbar {
+  width: 0.25rem;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #fcfaee6b;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: #fcfaeeaa;
+}
+body {
+  color: #fcfaee;
+  background-attachment: fixed;
+  background-image: linear-gradient(to top right, #160404, #171717, #13181b);
+  font-family: "Geist", sans-serif;
+}
+._img_mg {
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
