@@ -12,7 +12,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Transcribe Audio - Effortless Audio-to-Text Transcription",
+  title: "TransAudio - Effortless Audio-to-Text Transcription",
   description:
     "TransAudio is your go-to web app for seamless speech-to-text conversion. Upload your audio files and let TransAudio quickly transcribe them with high accuracy. Whether you're a journalist, researcher, or content creator, TransAudio makes transcription easy, efficient, and accessible. Experience smooth audio processing and precise text output today.",
   keywords:
