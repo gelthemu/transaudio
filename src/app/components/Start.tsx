@@ -45,7 +45,7 @@ export default function Start() {
               />
             </svg>
             <span>
-              <strong>File Size Limit:</strong> Maximum 38MB
+              <strong>File Size Limit:</strong> Maximum 10MB
             </span>
           </li>
           <li className="flex items-center">

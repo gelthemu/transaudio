@@ -1,4 +1,4 @@
-export const MAX_FILE_SIZE = 38000000;
+export const MAX_FILE_SIZE = 10000000;
 
 export const sanitizeFilename = (filename: string, timestamp: string): string => {
     const sanitizedName = filename
@@ -14,4 +14,3 @@ export const calculateDuration = (start: number): string => {
     const seconds = Math.floor((durationMs % 60000) / 1000);
     return `${String(seconds)}s`;
 };
-

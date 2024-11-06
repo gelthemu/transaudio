@@ -12,7 +12,7 @@ export async function POST(request: Request): Promise<NextResponse> {
                 // Validate user session
                 return {
                     allowedContentTypes: ["audio/mp3", "audio/mpeg"],
-                    maximumSizeInBytes: 38000000,
+                    maximumSizeInBytes: 10000000,
                     maximumDurationInSeconds: 300,
                     validUntil: Date.now() + 1000 * 60 * 60 * 3,
                     cacheControlMaxAge: 60 * 60 * 3,

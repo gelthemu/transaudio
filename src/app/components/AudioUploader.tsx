@@ -122,7 +122,7 @@ export default function AudioUploader({
                 </p>
               </div>
               <p className="text-sm text-brandBlue-light/90 font-semibold">
-                Format: MP3 (&lt; 38MB).
+                Format: MP3 (&lt; 10MB).
               </p>
             </>
           ) : (
@@ -136,7 +136,7 @@ export default function AudioUploader({
                 </p>
               </div>
               <p className="text-sm text-brandBlue-light/90 font-semibold">
-                Format: MP3 (&lt; 38MB).
+                Format: MP3 (&lt; 10MB).
               </p>
             </>
           )}

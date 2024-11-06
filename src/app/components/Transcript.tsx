@@ -45,9 +45,8 @@ export default function Transcript() {
       const file = state.formData.get("audio") as File;
 
       if (file.size > MAX_FILE_SIZE) {
-        toast.error("Limit is 38MB. Please try again.", {
+        toast.error("Limit is 10MB. Please try again.", {
           icon: false,
-          autoClose: false,
         });
         setState((prev) => ({ ...prev, loading: false }));
         return;

@@ -41,7 +41,7 @@ const Statement = () => {
           transcripts?
         </h2>
         <p className="text-brandBeige/60 mb-6">
-          Are your audio files larger than 38MB? Do they take longer to process?
+          Are your audio files larger than 10MB? Do they take longer to process?
           Or maybe you need a bit more help with cleaning up your transcripts?
           Just reach out, and I&apos;ll add the finishing touches. I&apos;m not
           that expensive, so don&apos;t worry about the cost!
