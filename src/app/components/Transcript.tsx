@@ -91,7 +91,7 @@ export default function Transcript() {
         if (typeof response === "object") {
           setTimeout(() => {
             fireConfetti();
-          }, 2000);
+          }, 1000);
           setState((prev) => ({
             ...prev,
             status: response.status || "",
