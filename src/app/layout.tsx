@@ -6,6 +6,8 @@ import type { Viewport } from "next";
 import ToastProvider from "./providers/ToastProvider";
 import "./styles/globals.css";
 
+const ga_id = "G-C2Y1PEW0HW";
+
 export const viewport: Viewport = {
   themeColor: "#0c161c",
   colorScheme: "dark",
@@ -57,9 +59,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID && (
-        <GoogleAnalytics ga_id={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID} />
-      )}
+      <head>
+        <GoogleAnalytics ga_id={ga_id} />
+      </head>
       <body className="font-geist text-brandBeige">
         <ToastProvider />
         {children}
