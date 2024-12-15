@@ -11,7 +11,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 For now, the web app has the following features:
 
 ```bash
-- upload an audio file of type/mp3;
+- upload an audio file of type/mp3 or type/mp4;
 
 - after uploading, the app will transcribe the audio file;
 
@@ -28,9 +28,7 @@ That's it for now.
 
 First, run the development server:
 
-Get started for free by visiting my website: [https://transaudio.geltaverse.com](https://transaudio.geltaverse.com) and upload an audio file less than 38MB of size. Let me know what you think.
-
-This project's details are available on [`geltaverse.com/projects/transaudio.app`](https://www.geltaverse.com/projects/transaudio.app).
+Get started for free by visiting my website: [https://transaudio.geltaverse.com](https://transaudio.geltaverse.com) and upload an audio file less than 8MB of size. Let me know what you think.
 
 ## Interested in collaborating?
 
