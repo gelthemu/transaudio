@@ -2,7 +2,7 @@
 
 import confetti from "canvas-confetti";
 
-export default function Confetti() {
+export default function FireConfetti() {
   confetti({
     particleCount: 100,
     spread: 80,

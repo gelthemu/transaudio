@@ -2,9 +2,9 @@ import React from "react";
 import { Circles } from "react-loader-spinner";
 
 export const LoadingState = () => (
-  <div className="bg-brandBeige/5 border border-brandBlue-light/50 rounded-md px-3 py-2 mt-8">
+  <div className="bg-beige/10 border border-blue-light/40 rounded-md px-3 py-2 mt-8">
     <div className="flex flex-col gap-2 p-4">
-      <div className="w-fit bg-brandBrick/20 rounded-full p-2">
+      <div className="w-fit bg-brick/20 rounded-full p-2">
         <Circles width="20" height="20" color="#fcfaee" />
       </div>
       <ul className="text-sm space-y-1 list-disc list-outside">

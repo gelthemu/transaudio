@@ -8,17 +8,25 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      screens: {
+        xs: "512px",
+        sm: "640px",
+        md: "768px",
+        lg: "1024px",
+        xl: "1280px",
+      },
       colors: {
-        brandBrick: "#b22222",
-        brandBeige: "#fcfaee",
-        brandBlue: {
+        brick: "#d62929",
+        purple: "#3c054c",
+        beige: "#fcfaee",
+        blue: {
           light: "#507687",
           dark: "#384b6f",
         },
-        brandDark: "#1a2227",
+        dark: "#1a2227",
       },
       fontFamily: {
-        geist: ["Geist", "sans-serif"],
+        jura: ["Jura", "Geist", "sans-serif"],
         geistMono: ["Geist Mono", "monospace"],
       },
     },

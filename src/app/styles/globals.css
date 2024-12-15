@@ -9,6 +9,7 @@
   font-display: swap;
   font-style: normal;
 }
+
 @font-face {
   font-family: "Geist Mono";
   src: url("/fonts/GeistMonoVF.woff") format("woff");
@@ -16,26 +17,37 @@
   font-display: swap;
   font-style: normal;
 }
+
 *,
 html {
   scroll-behavior: smooth;
 }
+
+:root {
+  --toastify-font-family: "Jura", "Geist", sans-serif;
+}
+
 ::-webkit-scrollbar {
   width: 0.25rem;
 }
+
 ::-webkit-scrollbar-thumb {
   background-color: #fcfaee6b;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background-color: #fcfaeeaa;
 }
-body {
+
+body,
+.canvas {
   color: #fcfaee;
   background-attachment: fixed;
   background-image: linear-gradient(to top right, #160404, #171717, #13181b);
-  font-family: "Geist", sans-serif;
+  font-family: "Jura", "Geist", sans-serif;
 }
-._img_mg {
+
+._img_ {
   pointer-events: none;
   -webkit-user-drag: none;
   user-select: none;

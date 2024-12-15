@@ -1,4 +1,4 @@
-export const MAX_FILE_SIZE = 10000000;
+export const MAX_FILE_SIZE = 8000000;
 
 export const sanitizeFilename = (filename: string, timestamp: string): string => {
     const sanitizedName = filename

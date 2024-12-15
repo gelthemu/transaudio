@@ -7,7 +7,7 @@ import { useDropzone } from "react-dropzone";
 import { Upload } from "lucide-react";
 import type { AudioUploaderProps } from "@/types";
 
-type AcceptedFile = "audio/mpeg" | "audio/mp3";
+type AcceptedFile = "audio/mpeg" | "audio/mp3" | "video/mp4" | "audio/mp4";
 
 export default function AudioUploader({
   onUpload,
@@ -26,7 +26,7 @@ export default function AudioUploader({
   };
 
   const validateFile = (fileType: string): fileType is AcceptedFile => {
-    return fileType === "audio/mpeg" || fileType === "audio/mp3";
+    return ["audio/mpeg", "audio/mp3", "video/mp4", "audio/mp4"].includes(fileType);
   };
 
   const onDrop = useCallback(
@@ -69,6 +69,9 @@ export default function AudioUploader({
     onDrop,
     accept: {
       "audio/mpeg": [".mp3"],
+      "audio/mp3": [".mp3"],
+      "video/mp4": [".mp4"],
+      "audio/mp4": [".mp4"],
     },
     multiple: false,
     disabled,
@@ -76,10 +79,10 @@ export default function AudioUploader({
 
   const getUploaderClassName = (): string => {
     const baseClasses =
-      "relative p-8 border-2 border-dashed rounded-lg transition-colors duration-200 ease-in-out";
+      "relative p-8 border-2 border-dashed border-blue-light/60 hover:border-blue-light rounded-md transition-colors duration-200 ease-in-out";
     const dragClasses = isDragActive
-      ? "border-brandBlue-light bg-brandBeige/20"
-      : "border-brandBlue-light/80 hover:border-brandBlue-light bg-brandBeige/5 hover:bg-brandBeige/10";
+      ? "bg-dark/60"
+      : " bg-dark/30 hover:bg-dark/60";
     const stateClasses = isUploading
       ? "opacity-50 cursor-not-allowed"
       : disabled
@@ -99,61 +102,38 @@ export default function AudioUploader({
     <div className="w-full mx-auto transition-all duration-200 ease-in-out">
       <div {...getRootProps()} className={getUploaderClassName()}>
         <input {...getInputProps()} />
-        <div className="space-y-4 text-center">
-          <Upload className="mx-auto h-12 w-12 text-brandBlue-light/90" />
+        <div className="space-y-4 text-center text-beige/80">
+          <Upload className="h-10 w-10 mx-auto" />
 
-          {isUploading ? (
+          {isDragActive ? (
             <>
               <div>
-                <p className="text-brandBlue-dark font-medium">
-                  UPLOADING . . .
-                </p>
-                <p className="text-brandBlue-dark">please wait</p>
+                <p className="font-medium">Drop the audio file here...</p>
               </div>
-              <p className="text-sm text-brandBlue-light/90 font-semibold">
-                File Accepted
-              </p>
-            </>
-          ) : isDragActive ? (
-            <>
-              <div>
-                <p className="text-brandBlue-light/90 font-medium">
-                  Drop the audio file here...
-                </p>
-              </div>
-              <p className="text-sm text-brandBlue-light/90 font-semibold">
-                Format: MP3 (&lt; 10MB).
-              </p>
             </>
           ) : (
             <>
               <div>
-                <p className="text-brandBlue-light/90 font-medium">
-                  Drag and drop a file here
-                </p>
-                <p className="text-brandBlue-light/90">
-                  or click to select one
-                </p>
+                <p className="font-semibold">Drag and drop a file here</p>
+                <p>or click to select one</p>
               </div>
-              <p className="text-sm text-brandBlue-light/90 font-semibold">
-                Format: MP3 (&lt; 10MB).
-              </p>
+              <p className="text-sm font-semibold">Format: MP3/MP4 (&lt; 8MB).</p>
             </>
           )}
         </div>
       </div>
 
       {audioUrl && displayAudio && (
-        <div className="w-full py-8">
-          <p className="text-brandBeige/90 bg-brandBrick/50 text-sm mb-4 px-3 py-2 rounded-lg max-w-max">
+        <div className="w-full pt-8">
+          <p className="text-beige/90 bg-brick/50 text-sm font-semibold mb-4 px-3 py-2 rounded-md max-w-max">
             {fileName}
           </p>
           <audio
             ref={audioRef}
             controls
-            controlsList="nodownload"
+            controlsList="nodownload noplaybackrate"
             src={audioUrl}
-            className="w-full bg-[#3a3b3b] rounded-lg"
+            className="w-full bg-[#3a3b3b] rounded-md"
             onEnded={handleAudioEnded}
           />
         </div>

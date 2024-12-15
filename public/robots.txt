@@ -1,5 +1,8 @@
+User-agent: Twitterbot
+Allow: /
+
 User-Agent: *
 Allow: /
-Disallow: /private/
+Disallow: /api/
 
 Sitemap: https://transaudio.geltaverse.com/sitemap.xml

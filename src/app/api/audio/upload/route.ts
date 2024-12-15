@@ -11,8 +11,8 @@ export async function POST(request: Request): Promise<NextResponse> {
             onBeforeGenerateToken: async (pathname, clientPayload, multipart) => {
                 // Validate user session
                 return {
-                    allowedContentTypes: ["audio/mp3", "audio/mpeg"],
-                    maximumSizeInBytes: 10000000,
+                    allowedContentTypes: ["audio/mp3", "audio/mpeg", "video/mp4", "audio/mp4"],
+                    maximumSizeInBytes: 8000000,
                     maximumDurationInSeconds: 300,
                     validUntil: Date.now() + 1000 * 60 * 60 * 3,
                     cacheControlMaxAge: 60 * 60 * 3,

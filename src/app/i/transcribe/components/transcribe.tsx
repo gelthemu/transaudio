@@ -3,11 +3,10 @@
 import React, { useState, useEffect } from "react";
 import { upload } from "@vercel/blob/client";
 import { toast } from "react-toastify";
-import { transcribeAudio } from "../actions";
-import Start from "./Start";
-import AudioUploader from "./AudioUploader";
-import { LoadingState } from "./LoadingState";
-import { TranscriptArea } from "./TranscriptArea";
+import { transcribeAudio } from "@/app/actions";
+import AudioUploader from "./t/audio-uploader";
+import { LoadingState } from "./t/loading-state";
+import { TranscriptArea } from "./t/transcript-area";
 import {
   MAX_FILE_SIZE,
   sanitizeFilename,
@@ -18,9 +17,9 @@ import type {
   TranscriptionResponse,
   UploadResponse,
 } from "@/types";
-import fireConfetti from "./Confetti";
+import FireConfetti from "./confetti";
 
-export default function Transcript() {
+export default function Transcribe() {
   const [state, setState] = useState<TranscriptState>({
     loading: false,
     formData: null,
@@ -45,7 +44,7 @@ export default function Transcript() {
       const file = state.formData.get("audio") as File;
 
       if (file.size > MAX_FILE_SIZE) {
-        toast.error("Limit is 10MB. Please try again.", {
+        toast.error("Limit is 8MB. Got it?", {
           icon: false,
         });
         setState((prev) => ({ ...prev, loading: false }));
@@ -90,8 +89,8 @@ export default function Transcript() {
 
         if (typeof response === "object") {
           setTimeout(() => {
-            fireConfetti();
-          }, 1000);
+            FireConfetti();
+          }, 500);
           setState((prev) => ({
             ...prev,
             status: response.status || "",
@@ -104,14 +103,11 @@ export default function Transcript() {
             icon: false,
             autoClose: 2000,
           });
+          setState((prev) => ({ ...prev, loading: false }));
         }
       } catch (error) {
-        toast.error("Failed. Please try again.", {
-          icon: false,
-          autoClose: 2000,
-        });
         console.error("Failed: ", error);
-        setState((prev) => ({ ...prev, loading: false }));
+        handleReset();
       }
       setState((prev) => ({ ...prev, loading: true }));
     };
@@ -164,16 +160,20 @@ export default function Transcript() {
       copied: false,
     });
     window.location.reload();
-    window.location.hash = "/";
-    window.location.hash = "start";
+    const startSection = document.getElementById("upload");
+    if (startSection) {
+      startSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
   };
 
   return (
     <section
-      id="start"
-      className="scroll-mt-24 bg-brandBlue-dark/25 py-12 px-5 md:px-10 border border-brandBlue-light/50"
+      id="upload"
+      className="scroll-mt-28 w-11/12 mx-auto bg-gradient-to-br from-blue-dark/20 to-brick/10 p-8 md:p-10 border border-blue-light/30 rounded-md"
     >
-      <Start />
       <AudioUploader
         onUpload={handleUpload}
         disabled={state.loading}

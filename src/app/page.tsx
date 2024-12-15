@@ -1,24 +1,20 @@
 "use client";
 
 import React from "react";
-import NavBar from "./components/NavBar";
-import Hero from "./components/Hero";
-import Features from "./components/Features";
-import Transcript from "./components/Transcript";
-import Statement from "./components/Statement";
-import Footer from "./components/Footer";
+import Hero from "./components/stuff/hero";
+import Features from "./components/stuff/features";
+import TryIt from "./components/stuff/try-it";
+import Statement from "./components/stuff/statement";
 
 export default function Home() {
   return (
     <>
-      <NavBar />
-      <main className="w-full md:max-w-screen-md mx-auto">
+      <main className="w-full md:max-w-screen-md mx-auto min-h-screen">
         <Hero />
         <Features />
-        <Transcript />
+        <TryIt />
         <Statement />
       </main>
-      <Footer />
     </>
   );
 }

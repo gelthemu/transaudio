@@ -43,13 +43,12 @@ export async function transcribeAudio(formAudio: FormData) {
             for (const utterance of utterances) {
                 const start = utterance.start / 1000;
 
-                const startHours = String(Math.floor(start / 3600)).padStart(2, "0");
                 const startMins = String(Math.floor((start % 3600) / 60)).padStart(2, "0");
                 const startSeconds = String(Math.floor(start % 60)).padStart(2, "0");
 
-                const startTime = `${startHours}:${startMins}:${startSeconds}`;
+                const startTime = `${startMins}:${startSeconds}`;
 
-                extractTranscript += `<span class="text-sm">[${startTime}]</span><br /><strong>SPEAKER ${utterance.speaker}:</strong><br /><span>${utterance.text}</span><br />`;
+                extractTranscript += `<span class="text-sm">[${startTime}]</span><br /><strong>VOICE ${utterance.speaker}:</strong><br /><span>${utterance.text}</span><br /><br />`;
             }
 
             const exportText = extractTranscript;
