@@ -7,9 +7,7 @@ export default function StartUpload() {
   return (
     <div className="w-full flex flex-col justify-center items-center p-8">
       <span className="sr-only">Click to start uploading...</span>
-      <div className="p-4 cursor-pointer animate-bounce">
-        <ChevronDown
-          onClick={() => {
+      <div className="p-4 cursor-pointer animate-bounce" onClick={() => {
             const startSection = document.getElementById("upload");
             if (startSection) {
               startSection.scrollIntoView({
@@ -18,8 +16,8 @@ export default function StartUpload() {
               });
             }
           }}
-          className="w-5 h-5"
-        />
+      >
+        <ChevronDown className="w-5 h-5" />
       </div>
     </div>
   );

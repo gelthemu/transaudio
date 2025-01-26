@@ -35,7 +35,7 @@ export default function CopyEmail() {
             )}
           </div>
         </div>
-        <p className="text-beige/40 mt-1.5 text-xs text-left pl-4">
+        <p className="text-beige/40 mt-1.5 text-sm text-left pl-4">
           Email replies fast.
         </p>
       </div>
