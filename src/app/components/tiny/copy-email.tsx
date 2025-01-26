@@ -18,15 +18,14 @@ export default function CopyEmail() {
   return (
     <>
       <div className="max-w-sm mx-auto">
-        <div className="flex items-center justify-between p-2 bg-blue-light/20 border border-beige/50 rounded-md">
+        <div
+          className="flex items-center justify-between p-2 bg-blue-light/20 border border-beige/50 rounded-md cursor-pointer"
+          onClick={handleCopy}
+        >
           <div className="text-sm text-blue-light font-medium font-mono pl-2">
             <span>transaudio@geltaverse.com</span>
           </div>
-          <div
-            title="copy"
-            className="flex p-2 text-blue-light cursor-pointer hover:bg-brick/10 transition-colors duration-200 rounded-md"
-            onClick={handleCopy}
-          >
+          <div title="copy" className="flex p-2 text-blue-light">
             <span className="sr-only">Copy Email</span>
             {copied ? (
               <Check className="w-4 h-4" />
