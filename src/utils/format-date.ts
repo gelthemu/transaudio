@@ -1,0 +1,28 @@
+export const formatDate = (input: number | string): string => {
+  const date = typeof input === "number" ? new Date(input) : new Date(input);
+
+  if (isNaN(date.getTime())) {
+    throw new Error("invalid date...");
+  }
+
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "Africa/Nairobi",
+  };
+  const timeOptions: Intl.DateTimeFormatOptions = {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+    timeZone: "Africa/Nairobi",
+  };
+
+  const formattedDate = date
+    .toLocaleDateString("en-US", dateOptions)
+    .replace(/(\w+),\s\w+\s(\d+),\s(\d+)/, "$1 $2, $3");
+  const formattedTime = date.toLocaleTimeString("en-US", timeOptions);
+
+  return `${formattedDate} at ${formattedTime}`;
+};

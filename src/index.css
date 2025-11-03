@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  ._img_ {
+    pointer-events: none;
+    -webkit-user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+  }
+}
+
+*,
+html {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  transition-duration: 0s;
+}
+
+body {
+  font-family: "Courier New", monospace;
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+.min-h-screen {
+  min-height: unset !important;
+}
+
+:root {
+  --my-line-height: 16px;
+}
+
+::selection {
+  background: #ff4040;
+  color: #ffffff;
+}
+
+::-moz-selection {
+  background: #ff4040;
+  color: #ffffff;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ffd9002f;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #1a1a1a;
+}
+
+._img_ {
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+audio {
+  background-color: #f1f3f4;
+}
+
+audio::-webkit-media-controls-panel {
+  background-color: #f1f3f4;
+  border: none;
+  border-radius: 0px !important;
+}
+
+.quake {
+  animation: quake 5s ease-in-out;
+}
+
+@keyframes quake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  10%,
+  90% {
+    transform: translateX(-20px);
+  }
+  20%,
+  80% {
+    transform: translateY(10px);
+  }
+  30%,
+  70% {
+    transform: translateX(40px);
+  }
+  40%,
+  60% {
+    transform: translateY(10px);
+  }
+  50% {
+    transform: translateX(0);
+  }
+}

@@ -1,0 +1,20 @@
+# *
+User-agent: *
+Allow: /
+Allow: /home
+
+# *
+User-agent: *
+Disallow: /
+Disallow: /api
+Disallow: /api/*
+Disallow: /transcripts
+Disallow: /transcript
+Disallow: /404
+Disallow: /500
+
+# Host
+Host: https://transaudio.geltaverse.com
+
+# Sitemaps
+Sitemap: https://transaudio.geltaverse.com/sitemap.xml
