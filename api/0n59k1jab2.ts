@@ -42,7 +42,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
 
     const url = await getSignedUrl(s3Client, command, {
-      expiresIn: 3600,
+      expiresIn: 7500,
     });
 
     res.status(200).json({ status: "success", url });

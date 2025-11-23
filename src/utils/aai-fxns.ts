@@ -56,7 +56,7 @@ export async function an59k1jab2(
 
       xhr.open("PUT", url);
       xhr.setRequestHeader("Content-Type", file.type);
-      xhr.timeout = 480000;
+      xhr.timeout = 600000;
       xhr.send(file);
     });
   } catch {

@@ -3,7 +3,7 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 
 const BUCKET_NAME = process.env.S3_BUCKET;
-const DURATION = 7200;
+const DURATION = 7500;
 
 const s3Client = new S3Client({
   endpoint: process.env.S3_ENDPOINT,

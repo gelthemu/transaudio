@@ -5,7 +5,7 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 const BUCKET_NAME = process.env.S3_BUCKET;
 const s3Client = new S3Client({
   endpoint: process.env.S3_ENDPOINT,
-  region: process.env.AWS_REGION || 'us-east-1',
+  region: process.env.AWS_REGION || "us-east-1",
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
@@ -42,7 +42,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
 
     const url = await getSignedUrl(s3Client, command, {
-      expiresIn: 7200,
+      expiresIn: 7500,
     });
 
     const params = {
