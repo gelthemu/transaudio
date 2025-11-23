@@ -253,7 +253,7 @@ export const Home: React.FC = () => {
           content="transaudio, geltaverse, audio transcription, speech to text, ai transcription, mp3 transcription, m4a transcription, free speech to text conversion"
         />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://transaudio.geltaverse.com/home" />
+        <link rel="canonical" href="https://transaudio.vercel.app/home" />
       </Helmet>
       <FocusManager />
       <div className="p-px">

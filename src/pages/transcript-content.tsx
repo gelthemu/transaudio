@@ -102,15 +102,9 @@ export const TranscriptContent: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>
-          {cleanFileName(storedTranscript.key)} | TransAudio - Effortless
-          Audio-to-Text Conversion
-        </title>
+        <title>Transcript | {cleanFileName(storedTranscript.key)} ...</title>
         <meta name="robots" content="noindex, nofollow" />
-        <link
-          rel="canonical"
-          href="https://transaudio.geltaverse.com/transcript"
-        />
+        <link rel="canonical" href="https://transaudio.vercel.app/transcript" />
       </Helmet>
       <FocusManager />
       <div className="p-px">

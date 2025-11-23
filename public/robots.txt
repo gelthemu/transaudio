@@ -14,7 +14,7 @@ Disallow: /404
 Disallow: /500
 
 # Host
-Host: https://transaudio.geltaverse.com
+Host: https://transaudio.vercel.app
 
 # Sitemaps
-Sitemap: https://transaudio.geltaverse.com/sitemap.xml
+Sitemap: https://transaudio.vercel.app/sitemap.xml

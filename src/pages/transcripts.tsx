@@ -37,7 +37,7 @@ export const Transcripts: React.FC = () => {
         <meta name="robots" content="noindex, nofollow" />
         <link
           rel="canonical"
-          href="https://transaudio.geltaverse.com/transcripts"
+          href="https://transaudio.vercel.app/transcripts"
         />
       </Helmet>
       <FocusManager

@@ -1,72 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, user-scalable=no"
+    />
+    <meta name="theme-color" content="#10b981" />
+    <title>TransAudio - Effortless Audio-to-Text Transcription</title>
+    <meta
+      name="description"
+      content="TransAudio is your go-to web app for seamless speech-to-text conversion. Upload your audio files and let TransAudio quickly transcribe them with high accuracy, in just a few clicks."
+    />
+    <meta
+      name="keywords"
+      content="transaudio, audio transcription, speech-to-text, audio-to-text converter, transcription tool, convert audio to text, convert speech to text for free, how to convert mp3 to text fro free, notes"
+    />
+    <meta name="author" content="Gelthem M." />
+    <meta name="creator" content="Gelthem M." />
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-  <meta name="theme-color" content="#10b981" />
-  <title>TransAudio - Effortless Audio-to-Text Transcription</title>
-  <meta name="description"
-    content="TransAudio is your go-to web app for seamless speech-to-text conversion. Upload your audio files and let TransAudio quickly transcribe them with high accuracy, in just a few clicks." />
-  <meta name="keywords"
-    content="transaudio, audio transcription, speech-to-text, audio-to-text converter, transcription tool, convert audio to text, convert speech to text for free, how to convert mp3 to text fro free, notes" />
-  <meta name="author" content="Gelthem Mucunguzi" />
-  <meta name="creator" content="Gelthem Mucunguzi" />
+    <link rel="preconnect" href="https://vercel.app" />
+    <link rel="dns-prefetch" href="https://vercel.app" />
+    <link rel="preconnect" href="https://transaudio.s3.tebi.io" />
+    <link rel="dns-prefetch" href="https://transaudio.s3.tebi.io" />
+    <link rel="preconnect" href="https://s3.tebi.io" />
+    <link rel="dns-prefetch" href="https://s3.tebi.io" />
 
-  <link rel="preconnect" href="https://geltaverse.com" />
-  <link rel="dns-prefetch" href="https://geltaverse.com" />
-  <link rel="preconnect" href="https://assets.geltaverse.com" />
-  <link rel="dns-prefetch" href="https://assets.geltaverse.com" />
-  <link rel="preconnect" href="https://transaudio.s3.tebi.io" />
-  <link rel="dns-prefetch" href="https://transaudio.s3.tebi.io" />
-  <link rel="preconnect" href="https://s3.tebi.io" />
-  <link rel="dns-prefetch" href="https://s3.tebi.io" />
+    <link rel="manifest" href="/io/site.webmanifest" />
+    <link rel="icon" type="image/ico" href="/io/favicon.ico" sizes="48x48" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="/io/favicon-16x16.png"
+      sizes="16x16"
+    />
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      href="/io/favicon-32x32.png"
+      sizes="32x32"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="/io/apple-touch-icon.png"
+      type="image/png"
+    />
+    <link
+      rel="icon"
+      type="image/ico"
+      href="https://transaudio.vercel.app/favicon.ico"
+    />
+    <link href="./src/index.css" rel="stylesheet" />
 
-  <link rel="manifest" href="/io/site.webmanifest" />
-  <link rel="icon" type="image/ico" href="/io/favicon.ico" sizes="48x48" />
-  <link rel="icon" type="image/png" href="/io/favicon-16x16.png" sizes="16x16" />
-  <link rel="shortcut icon" type="image/png" href="/io/favicon-32x32.png" sizes="32x32" />
-  <link rel="apple-touch-icon" href="/io/apple-touch-icon.png" type="image/png" />
-  <link rel="icon" type="image/ico" href="https://transaudio.geltaverse.com/favicon.ico" />
-  <link href="./src/index.css" rel="stylesheet" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="TransAudio" />
+    <meta property="og:locale" content="en_US" />
+    <meta
+      property="og:title"
+      content="Effortless Audio-to-Text Transcription"
+    />
+    <meta
+      property="og:description"
+      content="TransAudio is your go-to web app for seamless speech-to-text conversion. Upload your audio files and let TransAudio quickly transcribe them with high accuracy, in just a few clicks."
+    />
+    <meta
+      property="og:image"
+      content="https://transaudio.vercel.app/units/default-opengraph.webp"
+    />
+    <meta
+      property="og:image:alt"
+      content="Effortless Audio-to-Text Transcription"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:url" content="https://transaudio.vercel.app/" />
 
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="TransAudio" />
-  <meta property="og:locale" content="en_US" />
-  <meta property="og:title" content="Effortless Audio-to-Text Transcription" />
-  <meta property="og:description"
-    content="TransAudio is your go-to web app for seamless speech-to-text conversion. Upload your audio files and let TransAudio quickly transcribe them with high accuracy, in just a few clicks." />
-  <meta property="og:image" content="https://transaudio.geltaverse.com/units/default-opengraph.webp" />
-  <meta property="og:image:alt" content="Effortless Audio-to-Text Transcription" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:url" content="https://transaudio.geltaverse.com/" />
+    <meta name="twitter:creator" content="@glesomu" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Effortless Audio-to-Text Transcription"
+    />
+    <meta
+      name="twitter:description"
+      content="TransAudio is your go-to web app for seamless speech-to-text conversion. Upload your audio files and let TransAudio quickly transcribe them with high accuracy, in just a few clicks."
+    />
+    <meta
+      name="twitter:image"
+      content="https://transaudio.vercel.app/units/default-opengraph.webp"
+    />
+    <meta
+      name="twitter:image:alt"
+      content="Effortless Audio-to-Text Transcription"
+    />
 
-  <meta name="twitter:creator" content="@glesomu" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Effortless Audio-to-Text Transcription" />
-  <meta name="twitter:description"
-    content="TransAudio is your go-to web app for seamless speech-to-text conversion. Upload your audio files and let TransAudio quickly transcribe them with high accuracy, in just a few clicks." />
-  <meta name="twitter:image" content="https://transaudio.geltaverse.com/units/default-opengraph.webp" />
-  <meta name="twitter:image:alt" content="Effortless Audio-to-Text Transcription" />
+    <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="#0c161c" />
+    <meta name="apple-mobile-web-app-title" content="TransAudio" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="msapplication-TileColor" content="#000000" />
+    <meta property="og:site_name" content="TransAudio" />
+    <meta property="og:locale" content="en_US" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta
+      name="google-site-verification"
+      content="OfHaVPKM9Wu-vYzI9izprYBxt9AaQM7LmbovFBXMTDk"
+    />
+    <meta name="msvalidate.01" content="781D56DEEBBD64612B4741E403DBABE7" />
+  </head>
 
-  <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="#0c161c" />
-  <meta name="apple-mobile-web-app-title" content="TransAudio" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="msapplication-TileColor" content="#000000" />
-  <meta property="og:site_name" content="TransAudio" />
-  <meta property="og:locale" content="en_US" />
-  <meta name="format-detection" content="telephone=no" />
-  <meta name="google-site-verification" content="OfHaVPKM9Wu-vYzI9izprYBxt9AaQM7LmbovFBXMTDk" />
-  <meta name="msvalidate.01" content="781D56DEEBBD64612B4741E403DBABE7" />
-</head>
-
-<body>
-  <div class="bg-terminal-bg text-white font-mono p-4 md:p-6 select-none" id="root"></div>
-  <script type="module" src="/src/main.tsx"></script>
-</body>
-
+  <body>
+    <div
+      class="bg-terminal-bg text-white font-mono p-4 md:p-6 select-none"
+      id="root"
+    ></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>
