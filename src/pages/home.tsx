@@ -49,7 +49,7 @@ export const Home: React.FC = () => {
     setCurrentStep("redirect");
     setFile((prev) => (prev ? { ...prev, status: "redirect" as const } : null));
 
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 7500));
 
     const referer = document.referrer || window.location.href;
     const page_ref = referer.split("/").pop() || "home";
