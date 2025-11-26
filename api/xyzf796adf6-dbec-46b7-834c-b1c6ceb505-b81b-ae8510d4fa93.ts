@@ -1,55 +1,76 @@
-import type { VercelResponse } from "@vercel/node";
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 
-const API_KEY = process.env.IPDATA_API_KEY;
-const URL = "https://ipwho.is/";
-const DURATION = 7500;
+const CACHE_SECONDS = 30;
 
-export default async function getUserData(res: VercelResponse) {
+export default async function getUserData(
+  req: VercelRequest,
+  res: VercelResponse
+) {
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  res.setHeader("Cache-Control", `public, max-age=${DURATION}`);
 
-  //   if (req.method === "OPTIONS") {
-  //     res.status(200).end();
-  //     return;
-  //   }
-
-  //   if (req.method !== "POST") {
-  //     return res
-  //       .status(405)
-  //       .json({ status: "failed", error: "method not allowed" });
-  //   }
-
-  if (!API_KEY || !URL) {
-    return res.status(400).json({ status: "failed" });
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
   }
 
-  let ipData = null;
+  res.setHeader(
+    "Cache-Control",
+    `public, s-maxage=${CACHE_SECONDS}, stale-while-revalidate=60`
+  );
 
   try {
-    const response = await fetch(URL);
-    const s = await response.json();
+    // Get client IP (Vercel provides it in headers)
+    const ip =
+      req.headers["x-forwarded-for"]?.toString().split(",")[0].trim() ||
+      req.headers["x-real-ip"]?.toString() ||
+      // Fallback (should rarely happen on Vercel)
+      req.socket?.remoteAddress ||
+      null;
 
-    if (!response.ok && s.success !== true) {
-      return res.status(500).json({ status: "failed" });
+    if (!ip || ip === "127.0.0.1" || ip.startsWith("::ffff:127.")) {
+      return res
+        .status(400)
+        .json({ status: "failed", message: "IP not detectable" });
     }
 
-    ipData = {
-      ip: s.ip,
-      city: s.city,
-      region: s.region,
-      country: s.country,
-      continent: s.continent,
-      postal: s.postal,
-      latitude: s.latitude,
-      longitude: s.longitude,
-      timezone: s.timezone?.id,
-      isp: s.connection?.org || s.connection?.isp || "",
+    // Fetch geolocation from ipwho.is (free, no keyless)
+    const response = await fetch(
+      `https://ipwho.is/${ip}?fields=ip,city,region,country,continent,postal,latitude,longitude,timezone,connection`
+    );
+
+    if (!response.ok) {
+      throw new Error(`ipwho.is responded with ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (!data.success && data.message) {
+      throw new Error(data.message);
+    }
+
+    const ipData = {
+      ip: data.ip,
+      city: data.city || null,
+      region: data.region || null,
+      country: data.country || null,
+      continent: data.continent || null,
+      postal: data.postal || null,
+      latitude: data.latitude || null,
+      longitude: data.longitude || null,
+      timezone: data.timezone?.id || null,
+      isp: data.connection?.org || data.connection?.isp || null,
     };
 
-    return res.status(200).json({ status: "success", ipData });
-  } catch {
-    res.status(500).json({ status: "failed" });
+    return res.status(200).json({
+      status: "success",
+      ipData,
+    });
+  } catch (error) {
+    console.error("IP lookup failed:", error);
+    return res.status(500).json({
+      status: "failed",
+      message: "Could not retrieve location data",
+    });
   }
 }
