@@ -28,8 +28,8 @@ export async function ab3d2d3c1f7417(
 
     if (!response.ok) return { status: "failed" };
 
-    const { status, url } = await response.json();
-    if (status !== "success" || !url || typeof url !== "string") {
+    const { status, uploadUrl, fileUrl } = await response.json();
+    if (status !== "success" || !uploadUrl || !fileUrl) {
       return { status: "failed" };
     }
 
@@ -58,13 +58,13 @@ export async function ab3d2d3c1f7417(
       xhr.addEventListener("error", () => reject(new Error("network error")));
       xhr.addEventListener("timeout", () => reject(new Error("timeout")));
 
-      xhr.open("PUT", url);
+      xhr.open("PUT", uploadUrl);
       xhr.setRequestHeader("Content-Type", file.type);
       xhr.timeout = 600000;
       xhr.send(file);
     });
 
-    return { status: "success", url };
+    return { status: "success", url: fileUrl };
   } catch {
     return { status: "failed" };
   }

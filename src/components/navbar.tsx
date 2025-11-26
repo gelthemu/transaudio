@@ -4,7 +4,7 @@ export const NavBar: React.FC = () => {
   return (
     <nav>
       <div className="w-40">
-        <a href="/home" className="w-full">
+        <a href="/home" className="w-full outline-none focus:outline-none">
           <img
             src="/transaudio.logo.png"
             alt="TransAudio Logo"
