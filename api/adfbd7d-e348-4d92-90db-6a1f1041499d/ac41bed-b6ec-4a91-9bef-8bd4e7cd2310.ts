@@ -115,6 +115,10 @@ export default async function transcribeAudio(
         }
 
         const completeTranscript = {
+          id: transcriptId,
+          created: Date.now(),
+          confidence: polled.confidence,
+          summary: summary_text,
           words:
             polled.words?.map((w: TranscriptWord) => ({
               text: w.text,
@@ -132,11 +136,7 @@ export default async function transcribeAudio(
                   start: w.start,
                   end: w.end,
                 })) || [],
-            })) || [],
-          confidence: polled.confidence,
-          id: transcriptId,
-          summary: summary_text,
-          created: Date.now(),
+            })) || [],  
         };
 
         const jsonKey = `transcripts/${transcriptId}.json`;
