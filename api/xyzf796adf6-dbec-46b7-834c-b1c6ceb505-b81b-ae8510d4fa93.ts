@@ -1,28 +1,25 @@
-import type { VercelRequest, VercelResponse } from "@vercel/node";
+import type { VercelResponse } from "@vercel/node";
 
 const API_KEY = process.env.IPDATA_API_KEY;
 const URL = "https://ipwho.is/";
 const DURATION = 7500;
 
-export default async function getUserData(
-  req: VercelRequest,
-  res: VercelResponse
-) {
+export default async function getUserData(res: VercelResponse) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   res.setHeader("Cache-Control", `public, max-age=${DURATION}`);
 
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-    return;
-  }
+  //   if (req.method === "OPTIONS") {
+  //     res.status(200).end();
+  //     return;
+  //   }
 
-  if (req.method !== "POST") {
-    return res
-      .status(405)
-      .json({ status: "failed", error: "method not allowed" });
-  }
+  //   if (req.method !== "POST") {
+  //     return res
+  //       .status(405)
+  //       .json({ status: "failed", error: "method not allowed" });
+  //   }
 
   if (!API_KEY || !URL) {
     return res.status(400).json({ status: "failed" });
