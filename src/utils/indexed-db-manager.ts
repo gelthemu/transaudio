@@ -39,7 +39,11 @@ export const saveTranscript = async (
     const request = store.add(st);
 
     request.onerror = () => reject(request.error);
-    request.onsuccess = () => resolve(id);
+    request.onsuccess = () => {
+      const currentCount = parseInt(localStorage.getItem("runs") || "0", 10);
+      localStorage.setItem("runs", String(currentCount + 1));
+      resolve(id);
+    };
   });
 };
 

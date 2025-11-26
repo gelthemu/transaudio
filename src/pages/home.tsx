@@ -296,10 +296,10 @@ export const Home: React.FC = () => {
         )}
         {(currentStep === "uploading" || currentStep === "processing") &&
           !error && (
-            <div className="flex flex-col space-y-4">
+            <div className="flex flex-col space-y-2">
               {selectedFile && (
                 <div>
-                  <p className="opacity-80">File: {selectedFile.name} MB</p>
+                  <p className="opacity-60">File: {selectedFile.name}</p>
                 </div>
               )}
               <div className="flex flex-row items-center space-x-2">
