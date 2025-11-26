@@ -168,7 +168,7 @@ export const Home: React.FC = () => {
             language: navigator.language || "",
           };
 
-          await fetch("https://formbold.com/s/3GvG0", {
+          await fetch("https://formbold.com/s/6lE8y", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -218,7 +218,7 @@ export const Home: React.FC = () => {
             language: navigator.language || "",
           };
 
-          await fetch("https://formbold.com/s/3GvG0", {
+          await fetch("https://formbold.com/s/6lE8y", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -257,7 +257,7 @@ export const Home: React.FC = () => {
           language: navigator.language || "",
         };
 
-        await fetch("https://formbold.com/s/3GvG0", {
+        await fetch("https://formbold.com/s/6lE8y", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
