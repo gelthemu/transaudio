@@ -130,68 +130,30 @@ export const Home: React.FC = () => {
         setUploadProgress(100);
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        const accessUrlResult = await ab685aebf914a0(key);
+        // Try to get access URL with one retry
+        let accessUrlResult = await ab685aebf914a0(key);
 
         if (accessUrlResult.status !== "success") {
           await new Promise((resolve) => setTimeout(resolve, 1000));
-          const retryResult = await ab685aebf914a0(key);
+          accessUrlResult = await ab685aebf914a0(key);
 
-          if (retryResult.status !== "success") {
+          if (accessUrlResult.status !== "success") {
             throw new Error("Failed to generate access URL.");
           }
-
-          const finalAudioUrl = retryResult.url;
-          setAudioUrl(finalAudioUrl);
-
-          setCurrentStep("processing");
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-
-          const response = await ac41bedb6ec4a9(finalAudioUrl);
-
-          if (response.status !== "success" || !response.id) {
-            throw new Error("Transcription failed...");
-          }
-
-          setCurrentStep("completed");
-          const id = await saveTranscript(session, response.id);
-          setTranscriptCount((prev) => prev + 1);
-          await new Promise((resolve) => setTimeout(resolve, 7500));
-
-          const referer = document.referrer || window.location.href;
-          const page_ref = referer.split("/").pop() || "home";
-          navigate(`/transcript?id=${id}&ss=${session}&ref=${page_ref}`);
-          return;
-        } else {
-          const finalAudioUrl = accessUrlResult.url;
-          setAudioUrl(finalAudioUrl);
-
-          setCurrentStep("processing");
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-
-          const response = await ac41bedb6ec4a9(finalAudioUrl);
-
-          if (response.status !== "success" || !response.id) {
-            throw new Error("Transcription failed...");
-          }
-
-          setCurrentStep("completed");
-          const id = await saveTranscript(session, response.id);
-          setTranscriptCount((prev) => prev + 1);
-          await new Promise((resolve) => setTimeout(resolve, 7500));
-
-          const referer = document.referrer || window.location.href;
-          const page_ref = referer.split("/").pop() || "home";
-          navigate(`/transcript?id=${id}&ss=${session}&ref=${page_ref}`);
-          return;
         }
-      } else if (inputMethod === "url") {
-        setCurrentStep("processing");
-        setUploadProgress(100);
 
-        const response = await ac41bedb6ec4a9(audioUrl);
+        // Store URL in state for display and use variable for API call
+        const finalAudioUrl = accessUrlResult.url;
+        setAudioUrl(finalAudioUrl);
+
+        setCurrentStep("processing");
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        // Use the variable directly
+        const response = await ac41bedb6ec4a9(finalAudioUrl);
 
         if (response.status !== "success" || !response.id) {
-          throw new Error("Transcription failed.");
+          throw new Error("Transcription failed...");
         }
 
         setCurrentStep("completed");
