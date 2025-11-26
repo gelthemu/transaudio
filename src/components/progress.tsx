@@ -29,17 +29,24 @@ export const Progress: React.FC = () => {
   const emptyBars = 10 - filledBars;
 
   return (
-    <div className="flex flex-row items-center space-x-2 text-sm">
-      <div className="text-terminal-cyan">{"Runs"}:</div>
-      <div className="flex items-center space-x-0">
-        <span className="opacity-100">{"=".repeat(filledBars)}</span>
-        <span className="opacity-40">{"=".repeat(emptyBars)}</span>
+    <div className="flex flex-col space-y-1">
+      <div className="flex flex-row items-center space-x-2">
+        <div>{"Runs"}:</div>
+        <div className="flex items-center space-x-0">
+          <span className="opacity-100">{"=".repeat(filledBars)}</span>
+          <span className="opacity-40">{"=".repeat(emptyBars)}</span>
+        </div>
+        <div>
+          <span className="font-bold">{decimal.toFixed(2)}</span>
+        </div>
       </div>
-      <div>
-        <span className="text-terminal-amber">
-          {(decimal).toFixed(2)}
-        </span>
-      </div>
+      {transcripts.length >= 1 && (
+        <div>
+          <a href="/transcripts" className="underline">
+            View all transcripts
+          </a>
+        </div>
+      )}
     </div>
   );
 };

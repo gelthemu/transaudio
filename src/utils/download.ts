@@ -3,22 +3,16 @@ import { generateRandomId } from "../utils/random-id";
 import { Utterance, TranscriptResponse } from "../types";
 
 type DownloadParams = {
-  id: string;
-  user_file: string;
-  date: number;
   transcript: TranscriptResponse;
   setError: (error: string) => void;
 };
 
 export const iDownload = async ({
-  id,
-  user_file,
-  date,
   transcript,
   setError,
 }: DownloadParams): Promise<void> => {
   try {
-    if (!id || !transcript) {
+    if (!transcript.id || !transcript) {
       setError("zero transcripts ready for download...");
       return;
     }
@@ -42,8 +36,8 @@ export const iDownload = async ({
         .join("\n\n");
     }
 
-    content = `Transcript for: ${id}.${user_file}\nCreated: ${formatDate(
-      date || ""
+    content = `Transcript for: ${transcript.id}\nCreated: ${formatDate(
+      transcript.created || ""
     )}\nAccuracy: ${
       transcript?.confidence
         ? Math.round(transcript.confidence * 100).toFixed(2) + "%"
@@ -55,7 +49,7 @@ export const iDownload = async ({
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `transaudio-${randomId}-${id}.txt`;
+    a.download = `transaudio-${randomId}-${transcript.id}.txt`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

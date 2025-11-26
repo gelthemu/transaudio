@@ -1,244 +1,180 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { PromptTranscript } from "../components/prompts/prompt-home";
 import { getSession } from "../utils/session-manager";
-import { an59k1jab2, axpsfoxdmc } from "../utils/aai-fxns";
-import { FocusManager } from "../utils/focus-manager";
+import { ab3d2d3c1f7417, ac41bedb6ec4a9 } from "../utils/aai-fxns";
 import {
   saveTranscript,
   getTranscriptsBySession,
   cleanExpiredTranscripts,
 } from "../utils/indexed-db-manager";
 import { generateRandomId } from "../utils/random-id";
-import { Separator } from "../components/separator";
-import { ProcessingFile, UploadProgress } from "../types";
+import { Spinner } from "../components/spinner";
 
-type AppStep =
-  | "initial"
-  | "selected"
-  | "uploading"
-  | "processing"
-  | "completed"
-  | "redirect";
+type InputMethod = "file" | "url" | null;
+type AppStep = "initial" | "uploading" | "processing" | "completed";
 
 export const Home: React.FC = () => {
   const navigate = useNavigate();
   const [session, setSession] = useState<string>("");
   const [currentStep, setCurrentStep] = useState<AppStep>("initial");
-  const [file, setFile] = useState<ProcessingFile | null>(null);
+  const [inputMethod, setInputMethod] = useState<InputMethod>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [audioUrl, setAudioUrl] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [transcriptCount, setTranscriptCount] = useState(0);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
-  const random_id = generateRandomId();
   const session_id = getSession();
 
   useEffect(() => {
     const initializeSession = async () => {
       setSession(session_id);
-
       await cleanExpiredTranscripts();
       const transcripts = await getTranscriptsBySession(session_id);
       setTranscriptCount(transcripts.length);
     };
-
     initializeSession();
   }, [session_id]);
 
-  const handleRedirection = async (file_id: string) => {
-    setCurrentStep("redirect");
-    setFile((prev) => (prev ? { ...prev, status: "redirect" as const } : null));
-
-    await new Promise((resolve) => setTimeout(resolve, 7500));
-
-    const referer = document.referrer || window.location.href;
-    const page_ref = referer.split("/").pop() || "home";
-    navigate(`/transcript?ss=${session_id}&id=${file_id}&pg_ref=${page_ref}`);
+  const validateUrl = (url: string): boolean => {
+    try {
+      const urlObj = new URL(url);
+      const path = urlObj.pathname.toLowerCase();
+      return path.endsWith(".mp3") || path.endsWith(".m4a");
+    } catch {
+      return false;
+    }
   };
 
-  const handleSelectPrompt = async () => {
-    if (transcriptCount >= 10) {
-      setError("limit reached; delete old transcripts...");
-      return;
-    }
-
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = ".mp3,.m4a,audio/mp3,audio/mpeg,audio/m4a";
-    input.multiple = false;
-
-    input.onchange = async (e) => {
-      const selectedFiles = Array.from(
-        (e.target as HTMLInputElement).files || []
-      );
-
-      if (selectedFiles.length === 0) return;
-
-      const selectedFile = selectedFiles[0];
-
-      const validTypes = ["audio/mp3", "audio/mpeg", "audio/m4a"];
-      const isValidType =
-        validTypes.includes(selectedFile.type) ||
-        selectedFile.name.toLowerCase().match(/\.(mp3|m4a)$/);
-
-      if (!isValidType) {
-        setError(`invalid; allows MP3/M4A only...`);
-        return;
-      }
-
-      if (selectedFile.size > 60 * 1024 * 1024) {
-        setError(`file too large; 60MB max...`);
-        return;
-      }
-
-      const user_file = (
-        selectedFile.name.split(".").pop() || ""
-      ).toLowerCase();
-      const sanitized_name = selectedFile.name
-        .toLowerCase()
-        .replace(/[^a-z0-9.]+/g, "-")
-        .replace(/^-+|-+$/g, "")
-        .replace(/\.[^/.]+$/, "");
-      const key = `${random_id}-${sanitized_name}`;
-
-      const processingFile: ProcessingFile = {
-        file: selectedFile,
-        status: "pending",
-        key,
-        user_file,
-        uploadProgress: {
-          loaded: 0,
-          total: selectedFile.size,
-          percentage: 0,
-        },
-      };
-
-      setFile(processingFile);
-      setCurrentStep("selected");
-      setError("");
-    };
-
-    input.click();
-  };
-
-  const handleStartPrompt = async () => {
-    if (!file) {
-      setError("no file SELECT-ed...");
-      return;
-    }
-
-    if (transcriptCount >= 10) {
-      setError("limit reached; delete old transcripts...");
-      return;
-    }
-
-    setCurrentStep("uploading");
-    await uploadAndTranscribe();
-  };
-
-  const uploadAndTranscribe = async () => {
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (!file) return;
 
-    try {
-      const updated_file = { ...file, status: "uploading" as const };
-      setFile(updated_file);
+    const validTypes = ["audio/mp3", "audio/mpeg", "audio/m4a"];
+    const isValidType =
+      validTypes.includes(file.type) ||
+      file.name.toLowerCase().match(/\.(mp3|m4a)$/);
 
-      const uploadResult = await an59k1jab2(
-        file.file,
-        file.key,
-        file.user_file,
-        (progress: UploadProgress) => {
-          setFile((prev) =>
-            prev
-              ? {
-                  ...prev,
-                  uploadProgress: progress,
-                }
-              : null
-          );
-        }
-      );
-
-      if (uploadResult !== "success") {
-        throw new Error("file upload failed...");
-      }
-
-      const uploaded_file = {
-        ...updated_file,
-        status: "uploaded" as const,
-        uploadProgress: {
-          loaded: updated_file.file.size,
-          total: updated_file.file.size,
-          percentage: 100,
-        },
-      };
-      setFile(uploaded_file);
-
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      setCurrentStep("processing");
-
-      const handleTranscriptionStatus = () => {
-        setFile((prev) =>
-          prev ? { ...prev, status: "processing" as const } : null
-        );
-      };
-
-      const transcriptionResult = await axpsfoxdmc(
-        file.key,
-        file.user_file,
-        handleTranscriptionStatus
-      );
-
-      if (transcriptionResult !== "success") {
-        throw new Error("transcription failed...");
-      }
-
-      const completedFile: ProcessingFile = {
-        ...uploaded_file,
-        status: "completed" as const,
-      };
-      setFile(completedFile);
-      setCurrentStep("completed");
-
-      const redirect_id = await saveTranscript(
-        session,
-        completedFile.key,
-        completedFile.user_file
-      );
-
-      if (!redirect_id) {
-        throw new Error("failed to save transcript...");
-      }
-
-      setTranscriptCount((prev) => prev + 1);
-
-      await handleRedirection(redirect_id);
-    } catch (err) {
-      const errorFile = {
-        ...file,
-        status: "error" as const,
-        error: err instanceof Error ? err.message : "operation failed...",
-        uploadProgress: {
-          loaded: 0,
-          total: 0,
-          percentage: 0,
-        },
-      };
-
-      setFile(errorFile);
-      setCurrentStep("initial");
-      setError(err instanceof Error ? err.message : "operation failed...");
+    if (!isValidType) {
+      setError("Invalid file type. Select MP3 or M4A files...");
+      return;
     }
-  };
 
-  const handleCancel = () => {
-    setFile(null);
-    setCurrentStep("initial");
+    if (file.size > 60 * 1024 * 1024) {
+      setError("File too large. Max size is 60MB...");
+      return;
+    }
+
+    setSelectedFile(file);
     setError("");
   };
 
-  const clearError = () => setError("");
+  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAudioUrl(e.target.value);
+    setError("");
+  };
+
+  const handleStartTranscription = async () => {
+    if (transcriptCount >= 10) {
+      setError("Limit reached. Please delete some old transcripts...");
+      return;
+    }
+
+    if (inputMethod === "file" && !selectedFile) {
+      setError("Please select a file first...");
+      return;
+    }
+
+    if (inputMethod === "url") {
+      if (!audioUrl.trim()) {
+        setError("Please enter a valid audio URL...");
+        return;
+      }
+      if (!validateUrl(audioUrl)) {
+        setError("Invalid URL. Must be a direct link to an MP3 or M4A file...");
+        return;
+      }
+    }
+
+    setError("");
+    setCurrentStep("uploading");
+
+    try {
+      let key: string;
+
+      if (inputMethod === "file" && selectedFile) {
+        const random_id = generateRandomId();
+        const sanitized_name = selectedFile.name
+          .toLowerCase()
+          .replace(/[^a-z0-9.]+/g, "-")
+          .replace(/^-+|-+$/g, "");
+        key = `${random_id}-${sanitized_name}`;
+
+        const uploadResult = await ab3d2d3c1f7417(
+          selectedFile,
+          key,
+          (progress) => {
+            setUploadProgress(progress.percentage);
+          }
+        );
+
+        if (uploadResult.status !== "success" || !uploadResult.fileUrl) {
+          throw new Error("File upload failed.");
+        }
+
+        setAudioUrl(uploadResult.fileUrl);
+
+        setCurrentStep("processing");
+        setUploadProgress(100);
+
+        const response = await ac41bedb6ec4a9(audioUrl);
+
+        if (response.status !== "success" || !response.id) {
+          throw new Error("Transcription failed...");
+        }
+
+        setCurrentStep("completed");
+
+        const redirect_id = await saveTranscript(session, response.id);
+
+        setTranscriptCount((prev) => prev + 1);
+        navigate(`/transcript?id=${redirect_id}&ss=${session}`);
+        return;
+      } else if (inputMethod === "url") {
+        setCurrentStep("processing");
+        setUploadProgress(100);
+
+        const response = await ac41bedb6ec4a9(audioUrl);
+
+        if (response.status !== "success" || !response.id) {
+          throw new Error("Transcription failed.");
+        }
+
+        setCurrentStep("completed");
+
+        const redirect_id = await saveTranscript(session, response.id);
+
+        setTranscriptCount((prev) => prev + 1);
+        navigate(`/transcript?id=${redirect_id}&ss=${session}`);
+      } else {
+        throw new Error("No input method selected.");
+      }
+    } catch (err) {
+      setCurrentStep("initial");
+      setError(err instanceof Error ? err.message : "Operation failed.");
+      setUploadProgress(0);
+    }
+  };
+
+  const handleReset = () => {
+    setSelectedFile(null);
+    setAudioUrl("");
+    setInputMethod(null);
+    setError("");
+    setCurrentStep("initial");
+    setUploadProgress(0);
+  };
 
   return (
     <>
@@ -255,31 +191,124 @@ export const Home: React.FC = () => {
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://transaudio.vercel.app/home" />
       </Helmet>
-      <FocusManager />
-      <div className="p-px">
-        <div className="flex flex-col text-left">
+      <div className="flex flex-col space-y-4">
+        {currentStep === "initial" && (
           <div>
-            <h1 className="text-2xl text-terminal-amber font-bold">
-              <span>{"Try"}</span>
-              <span className="text-terminal-green">{" It "}</span>
-              <span>{"for"}</span>
-              <span className="text-terminal-green">{" Free"}</span>
-              <span>{"!"}</span>
-            </h1>
-            <div className="opacity-60">Get started by selecting a file.</div>
+            {!inputMethod ? (
+              <div>
+                <div className="pb-4 flex gap-2 text-sm font-bold">
+                  <button
+                    className="px-4 py-2 bg-light text-dark border-none"
+                    type="button"
+                    onClick={() => setInputMethod("file")}
+                    disabled={transcriptCount >= 10}
+                  >
+                    Upload File
+                  </button>
+                  <button
+                    className="px-4 py-2 border border-light bg-transparent"
+                    type="button"
+                    onClick={() => setInputMethod("url")}
+                    disabled={transcriptCount >= 10}
+                  >
+                    Provide URL
+                  </button>
+                </div>
+                {transcriptCount >= 10 && (
+                  <p className="flex flex-col space-y-0 font-semibold text-sm">
+                    <span className="text-red">Limit reached.</span>
+                    <span className="text-light/60">
+                      Please delete old transcripts first.
+                    </span>
+                  </p>
+                )}
+              </div>
+            ) : (
+              <div className="flex flex-col space-y-4">
+                {inputMethod === "file" ? (
+                  <div>
+                    <form>
+                      <div className="flex flex-col space-y-4">
+                        <label htmlFor="file-input">
+                          Select MP3 or M4A file (max 60MB)
+                        </label>
+                        <input
+                          className="text-sm max-w-sm border-none outline-none focus:outline-none"
+                          type="file"
+                          id="file-input"
+                          accept=".mp3,.m4a,audio/mp3,audio/mpeg,audio/m4a"
+                          onChange={handleFileSelect}
+                        />
+                      </div>
+                      {selectedFile && (
+                        <div>
+                          <p className="opacity-80">
+                            Size: {(selectedFile.size / 1024 / 1024).toFixed(2)}{" "}
+                            MB
+                          </p>
+                        </div>
+                      )}
+                    </form>
+                  </div>
+                ) : (
+                  <div>
+                    <form>
+                      <div className="flex flex-col space-y-4">
+                        <label htmlFor="url-input">
+                          Enter URL to MP3 or M4A file
+                        </label>
+                        <input
+                          className="text-sm text-dark font-semibold max-w-sm px-2 py-1 border-none outline-none focus:outline-none"
+                          type="url"
+                          id="url-input"
+                          autoFocus
+                          value={audioUrl}
+                          onChange={handleUrlChange}
+                          placeholder="https://sitename.com/audio.mp3"
+                          autoCapitalize="off"
+                          autoComplete="off"
+                          autoCorrect="off"
+                          spellCheck="false"
+                        />
+                      </div>
+                    </form>
+                  </div>
+                )}
+                <div className="flex gap-2 text-sm font-bold">
+                  <button
+                    className="px-2 py-1 bg-light text-dark border-none"
+                    type="button"
+                    onClick={handleStartTranscription}
+                  >
+                    Start Transcription
+                  </button>
+                  <button
+                    className="px-2 py-1 border border-light bg-transparent"
+                    type="button"
+                    onClick={handleReset}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
-          <Separator limit={10} margin="my-2" />
-          <PromptTranscript
-            file={file}
-            step={currentStep}
-            error={error}
-            onSelect={handleSelectPrompt}
-            onStart={handleStartPrompt}
-            onCancel={handleCancel}
-            onClearError={clearError}
-            hasFile={!!file}
-          />
-        </div>
+        )}
+        {(currentStep === "uploading" || currentStep === "processing") && (
+          <div className="flex flex-row items-center space-x-2">
+            <Spinner />
+            <p className="text-sm font-semibold">
+              {currentStep === "uploading"
+                ? `Uploading... ${uploadProgress}%`
+                : "Processing..."}
+            </p>
+          </div>
+        )}
+        {error && (
+          <div>
+            <p className="text-red">Error: {error}</p>
+          </div>
+        )}
       </div>
     </>
   );

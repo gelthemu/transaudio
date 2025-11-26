@@ -5,13 +5,13 @@ interface SeparatorProps {
   margin?: string;
 }
 
-export const Separator: React.FC<SeparatorProps> = ({ limit = 80, margin }) => {
+export const Separator: React.FC<SeparatorProps> = ({ limit = 12, margin }) => {
   const separator = "—·".repeat(limit);
 
   return (
     <div
       className={`${
-        margin ? margin : "my-4 md:my-6"
+        margin ? margin : "my-6 md:my-8"
       } opacity-20 overflow-hidden whitespace-nowrap`}
     >
       {separator}

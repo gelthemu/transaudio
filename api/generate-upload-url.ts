@@ -5,14 +5,17 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 const BUCKET_NAME = process.env.S3_BUCKET;
 const s3Client = new S3Client({
   endpoint: process.env.S3_ENDPOINT,
-  region: process.env.AWS_REGION || 'us-east-1',
+  region: process.env.AWS_REGION || "us-east-1",
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
   },
 });
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function generateUploadUrl(
+  req: VercelRequest,
+  res: VercelResponse
+) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -27,17 +30,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const { key, user_file, contentType } = req.body;
+    const { key, contentType } = req.body;
 
-    if (!key || !user_file || !contentType) {
+    if (!key || !contentType || !BUCKET_NAME) {
       return res.status(400).json({ status: "failed" });
     }
 
-    const f_key = `uploads/${key}.${user_file}`;
+    const objectKey = `uploads/${key}`;
 
     const command = new PutObjectCommand({
       Bucket: BUCKET_NAME,
-      Key: f_key,
+      Key: objectKey,
       ContentType: contentType,
     });
 

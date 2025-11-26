@@ -1,5 +1,4 @@
 import { StoredTranscript } from "../types";
-import { generateRandomId } from "./random-id";
 
 const DB_NAME = "transaudio";
 const DB_VERSION = 1;
@@ -24,18 +23,13 @@ export const initDB = (): Promise<IDBDatabase> => {
 
 export const saveTranscript = async (
   session: string,
-  key: string,
-  user_file: string
+  id: string
 ): Promise<string> => {
   const db = await initDB();
-  const random_id = generateRandomId();
-  const id = `${key}-${random_id}`;
 
   const st: StoredTranscript = {
     session,
-    key,
     id,
-    user_file: user_file,
     created: Date.now(),
   };
 
@@ -338,9 +332,8 @@ export const deleteAllTranscripts = async (): Promise<number> => {
 // deleteAllTranscripts();
 
 // saveTranscript(
-//   "942c7710-b28a-4d1e-b83a-76db1b4d7664",
-//   "t54ot69zxt8u-20230607-me-canadian-wildfires",
-//   "mp3"
+//   "transaudio-4b6185ae-bf91-4a0e-b3fd-b398be978464",
+//   "t2v4zz5rge6r-gmt20251112-091813-recording"
 // );
 
 // deleteTranscriptById(

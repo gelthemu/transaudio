@@ -2,9 +2,9 @@ import React from "react";
 
 export const NavBar: React.FC = () => {
   return (
-    <>
-      <nav className="flex flex-col p-1">
-        <div className="w-40 flex items-center justify-center">
+    <nav>
+      <div className="w-40">
+        <a href="/home" className="w-full">
           <img
             src="/transaudio.logo.png"
             alt="TransAudio Logo"
@@ -12,11 +12,13 @@ export const NavBar: React.FC = () => {
             height={600}
             className="w-full aspect-[4/1] _img_"
           />
-        </div>
-        <div>
-          <span>Transform Audio to Text with Ease</span>
-        </div>
-      </nav>
-    </>
+        </a>
+      </div>
+      <div>
+        <h1 className="text-lg font-semibold">
+          Transform Audio to Text with Ease
+        </h1>
+      </div>
+    </nav>
   );
 };

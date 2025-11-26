@@ -15,8 +15,8 @@ export const Footer: React.FC = () => {
   const day = currentDate.getDate();
 
   return (
-    <footer className="flex flex-col space-y-4 p-1 text-sm opacity-60">
-      <div className="text-terminal-amber">Session ID: {session}</div>
+    <footer className="flex flex-col space-y-4 p-1 text-sm opacity-70">
+      <div>Session ID: {session}</div>
       <div>
         <span>
           {month} {day}, {year} {" | "} TransAudio

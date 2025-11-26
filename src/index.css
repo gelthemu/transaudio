@@ -21,13 +21,13 @@ html {
 }
 
 body {
-  font-family: "Courier New", monospace;
-  background-color: #1a1a1a;
+  background-color: #384b6f;
   color: #ffffff;
-}
-
-.min-h-screen {
-  min-height: unset !important;
+  font-size: 16px;
+  line-height: 1.5;
+  font-family: "Jura", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
 }
 
 :root {
@@ -50,16 +50,16 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #1a1a1a;
+  background: #222e44;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #ffd9002f;
+  background: #ffffff2f;
   border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #1a1a1a;
+  background: #ffffff6c;
 }
 
 ._img_ {
@@ -71,42 +71,40 @@ body {
   -ms-user-select: none;
 }
 
-audio {
-  background-color: #f1f3f4;
+button {
+  cursor: pointer;
 }
 
-audio::-webkit-media-controls-panel {
-  background-color: #f1f3f4;
-  border: none;
-  border-radius: 0px !important;
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-.quake {
-  animation: quake 5s ease-in-out;
+a {
+  color: inherit;
 }
 
-@keyframes quake {
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-  10%,
-  90% {
-    transform: translateX(-20px);
-  }
-  20%,
-  80% {
-    transform: translateY(10px);
-  }
-  30%,
-  70% {
-    transform: translateX(40px);
-  }
-  40%,
-  60% {
-    transform: translateY(10px);
-  }
-  50% {
-    transform: translateX(0);
-  }
+table.transcripts {
+  @apply w-full max-w-xl p-px text-left border-collapse border-none border-transparent bg-dark/60;
+}
+
+table.transcripts th {
+  @apply border-none px-4 py-2;
+}
+
+table.transcripts td {
+  @apply border-none p-4;
+}
+
+table.transcripts thead {
+  @apply font-bold border-collapse border-b border-light/60 bg-red/60;
+}
+
+table.transcripts tbody tr {
+  @apply text-sm font-semibold border-collapse border-b border-light/20;
+}
+
+table.transcripts th:first-child,
+table.transcripts td:first-child {
+  @apply whitespace-nowrap pr-0 py-2;
 }

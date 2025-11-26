@@ -1,128 +1,157 @@
 import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { Spinner } from "../components/spinner";
 import { TranscriptViewer } from "../components/transcript-viewer";
-import { PromptDisplay } from "../components/prompts/prompt-display";
-import { PromptTranscript } from "../components/prompts/prompt-transcript";
-import { getTranscriptById } from "../utils/indexed-db-manager";
-import { FocusManager } from "../utils/focus-manager";
-import { jprx74abrm } from "../utils/aai-fxns";
-import { StoredTranscript, FinalTranscript } from "../types";
+import { ad58ad087edb98 } from "../utils/aai-fxns";
+import { TranscriptResponse } from "../types";
 import { formatDate } from "../utils/format-date";
 import { iDownload } from "../utils/download";
-import { cleanFileName } from "../utils/random-id";
+
+// import transcriptData from "../data/t1xms4uc85sg-20230607-me-canadian-wildfires.json";
+// const t = (transcript ?? transcriptData) as TranscriptResponse;
 
 export const TranscriptContent: React.FC = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const id = searchParams.get("id");
-  const [storedTranscript, setStoredTranscript] =
-    useState<StoredTranscript | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
-  const [transcript, setTranscript] = useState<FinalTranscript | null>(null);
+  const [t, setT] = useState<TranscriptResponse | null>(null);
 
   useEffect(() => {
     const loadTranscript = async () => {
-      const start_time = Date.now();
-
       if (!id) {
-        setError("invalid transcript id...");
+        setError("Invalid transcript ID.");
         setLoading(false);
         return;
       }
 
       try {
-        const storedTranscript = await getTranscriptById(id);
-        if (!storedTranscript) {
-          setError("transcript not found or expired...");
+        const data = await ad58ad087edb98(id);
+        if (!data) {
+          setError("Transcript not found or expired.");
         } else {
-          setStoredTranscript(storedTranscript);
-          const key = storedTranscript.key;
-          const user_file = storedTranscript.user_file;
-          const data = await jprx74abrm(key, user_file);
-          setTranscript(data);
+          setT(data);
         }
       } catch {
-        setError("failed to load transcript...");
+        setError("Failed to load transcript.");
       }
 
-      const elapsed_time = Date.now() - start_time;
-      const remaining_time = Math.max(0, 3200 - elapsed_time);
-
-      setTimeout(() => setLoading(false), remaining_time);
+      setLoading(false);
     };
 
     loadTranscript();
   }, [id]);
 
-  const t = transcript?.transcript;
-
-  if (error || !storedTranscript || !t || loading) {
+  if (loading) {
     return (
       <>
         <Helmet>
           <meta name="robots" content="noindex, nofollow" />
         </Helmet>
-        <FocusManager />
-        <div className="flex flex-col space-y-4 py-8">
-          {loading ? (
-            <Spinner />
-          ) : error || !storedTranscript || !t ? (
-            <>
-              <div className="opacity-60">
-                <span>ERROR: {error}</span>
-              </div>
-              <PromptDisplay />
-            </>
-          ) : (
-            <div className="opacity-40">
-              <span>{"😑"}</span>
-            </div>
-          )}
+        <div>
+          <Spinner />
+        </div>
+      </>
+    );
+  }
+
+  if (error || !t) {
+    return (
+      <>
+        <Helmet>
+          <meta name="robots" content="noindex, nofollow" />
+        </Helmet>
+        <div className="flex flex-col space-y-4">
+          <div>
+            <p className="text-red">
+              Error: {error || "Transcript not available"}
+            </p>
+          </div>
+          <div className="opacity-90 flex flex-row space-x-2">
+            <button
+              className="px-4 py-2 text-sm font-bold bg-light text-dark border-none decoration-none"
+              type="button"
+              onClick={() => navigate("/home")}
+            >
+              Go Home
+            </button>
+            <button
+              className="px-4 py-2 border border-light bg-transparent"
+              type="button"
+              onClick={() => navigate("/transcripts")}
+            >
+              View all transcripts
+            </button>
+          </div>
         </div>
       </>
     );
   }
 
   const handleDownload = async () => {
-    if (!storedTranscript || !t) {
+    if (!t) {
       return;
     }
 
     await iDownload({
-      id: storedTranscript.key,
-      user_file: storedTranscript.user_file,
-      date: storedTranscript.created,
       transcript: t,
       setError,
     });
   };
 
+  const handleViewSummary = () => {
+    if (!t?.summary) {
+      return;
+    }
+
+    const summaryEl = document.getElementById("summary");
+    if (summaryEl) {
+      summaryEl.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <>
       <Helmet>
-        <title>Transcript | {cleanFileName(storedTranscript.key)} ...</title>
+        <title>Transcript | {t.id}</title>
         <meta name="robots" content="noindex, nofollow" />
         <link rel="canonical" href="https://transaudio.vercel.app/transcript" />
       </Helmet>
-      <FocusManager />
-      <div className="p-px">
-        <div className="flex flex-col space-y-2 text-left">
-          <h1 className="text-2xl text-terminal-green font-bold text-wrap">
-            File: "{cleanFileName(storedTranscript.key)}"
-          </h1>
-          <div className="flex flex-col opacity-60 text-sm">
-            <span>Created: {formatDate(storedTranscript.created)}</span>
-            <span>
+      <div>
+        <div className="flex flex-col space-y-4">
+          <h1 className="text-lg font-bold">{id}</h1>
+          <div className="text-sm opacity-70">
+            <p>Created: {formatDate(t.created)}</p>
+            <p>
               Accuracy:{" "}
               {t?.confidence ? (t?.confidence * 100).toFixed(2) + "%" : "-"}
-            </span>
+            </p>
           </div>
-          <div className="py-2">
-            <PromptTranscript onDownload={handleDownload} />
+          <div className="flex flex-col gap-2">
+            <div>
+              <button
+                className="px-2 py-1 font-bold bg-light text-dark border-none"
+                type="button"
+                onClick={handleDownload}
+              >
+                Download Transcript
+              </button>
+            </div>
+            {t?.summary && (
+              <div>
+                <button
+                  className="px-2 py-1 font-semibold border border-light bg-transparent"
+                  type="button"
+                  onClick={handleViewSummary}
+                >
+                  View Summary
+                </button>
+              </div>
+            )}
           </div>
-          <TranscriptViewer transcript={transcript} />
+          <TranscriptViewer t={t} />
         </div>
       </div>
     </>

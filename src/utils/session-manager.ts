@@ -20,7 +20,8 @@ export const getSession = (): string => {
     }
   }
 
-  const newSession = uuidv4();
+  const generatedSession = uuidv4();
+  const newSession = `transaudio-${generatedSession}`;
   const sessionData: SessionData = {
     id: newSession,
     expires: Date.now() + 5 * 24 * 60 * 60 * 1000,

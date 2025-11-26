@@ -13,9 +13,5 @@ export const Spinner: React.FC = () => {
     return () => clearInterval(interval);
   }, [spinnerChars.length]);
 
-  return (
-    <div className="font-bold text-lg text-terminal-cyan">
-      {spinnerChars[spinnerIndex]}
-    </div>
-  );
+  return <div>{spinnerChars[spinnerIndex]}</div>;
 };

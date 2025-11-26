@@ -1,15 +1,3 @@
-export type FileStatus =
-  | "pending"
-  | "uploading"
-  | "uploaded"
-  | "queued"
-  | "processing"
-  | "ready"
-  | "completing"
-  | "completed"
-  | "redirect"
-  | "error";
-
 export interface TranscriptWord {
   text: string;
   start: number;
@@ -27,14 +15,9 @@ export interface TranscriptResponse {
   words?: TranscriptWord[];
   utterances?: Utterance[];
   confidence?: number;
-  key: string;
-  user_file: string;
+  id: string;
   summary: string;
-}
-
-export interface FinalTranscript {
-  transcript: TranscriptResponse;
-  signed_url: string;
+  created: number;
 }
 
 export interface UploadProgress {
@@ -43,19 +26,8 @@ export interface UploadProgress {
   percentage: number;
 }
 
-export interface ProcessingFile {
-  file: File;
-  key: string;
-  user_file: string;
-  uploadProgress: UploadProgress;
-  status: FileStatus;
-  error?: string;
-}
-
 export interface StoredTranscript {
   session: string;
-  key: string;
   id: string;
-  user_file: string;
   created: number;
 }
