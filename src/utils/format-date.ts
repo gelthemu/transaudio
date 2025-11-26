@@ -1,12 +1,7 @@
 export const formatDate = (input: number | string): string => {
   const timestamp = typeof input === "string" ? Number(input) : input;
   const date = new Date(timestamp);
-
-  console.log("Input:", input);
-  console.log("Timestamp:", timestamp);
-  console.log("Date:", date);
-  console.log("Is valid?", !isNaN(date.getTime()));
-
+  
   if (isNaN(date.getTime())) {
     throw new Error(`Invalid date. Input: ${input}, Parsed: ${timestamp}`);
   }
