@@ -46,8 +46,14 @@ export default async function getTranscript(
     const command = new GetObjectCommand({ Bucket: BUCKET_NAME, Key: key });
     const response = await s3Client.send(command);
     const bodyContents = await response.Body?.transformToString();
-    const data = JSON.parse(bodyContents || "{}");
-    res.status(200).json({ data });
+    
+    console.log("Raw body:", bodyContents);
+  const data = JSON.parse(bodyContents || "{}");
+
+  console.log("Created value:", data.created);
+  console.log("Created type:", typeof data.created);
+  
+  res.status(200).json({ data });
   } catch {
     res.status(500).json({ status: "failed", error: "internal server error" });
   }
