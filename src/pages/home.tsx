@@ -130,7 +130,6 @@ export const Home: React.FC = () => {
         setUploadProgress(100);
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        // Try to get access URL with one retry
         let accessUrlResult = await ab685aebf914a0(key);
 
         if (accessUrlResult.status !== "success") {
@@ -142,14 +141,12 @@ export const Home: React.FC = () => {
           }
         }
 
-        // Store URL in state for display and use variable for API call
         const finalAudioUrl = accessUrlResult.url;
         setAudioUrl(finalAudioUrl);
 
         setCurrentStep("processing");
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        // Use the variable directly
         const response = await ac41bedb6ec4a9(finalAudioUrl);
 
         if (response.status !== "success" || !response.id) {

@@ -8,8 +8,8 @@ import { TranscriptResponse } from "../types";
 import { formatDate } from "../utils/format-date";
 import { iDownload } from "../utils/download";
 
-// import transcriptData from "../data/t1xms4uc85sg-20230607-me-canadian-wildfires.json";
-// const t = (transcript ?? transcriptData) as TranscriptResponse;
+// import transcriptData from "../data/test.json";
+// const t = transcriptData as TranscriptResponse;
 
 export const TranscriptContent: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -17,7 +17,7 @@ export const TranscriptContent: React.FC = () => {
   const id = searchParams.get("id");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
-  const [t, setT] = useState<TranscriptResponse | null>(null);
+  const [transcript, setTranscript] = useState<TranscriptResponse | null>(null);
 
   useEffect(() => {
     const loadTranscript = async () => {
@@ -32,7 +32,7 @@ export const TranscriptContent: React.FC = () => {
         if (!data) {
           setError("Transcript not found or expired.");
         } else {
-          setT(data);
+          setTranscript(data);
         }
       } catch {
         setError("Failed to load transcript.");
@@ -57,7 +57,7 @@ export const TranscriptContent: React.FC = () => {
     );
   }
 
-  if (error || !t) {
+  if (error || !transcript) {
     return (
       <>
         <Helmet>
@@ -91,18 +91,18 @@ export const TranscriptContent: React.FC = () => {
   }
 
   const handleDownload = async () => {
-    if (!t) {
+    if (!transcript) {
       return;
     }
 
     await iDownload({
-      transcript: t,
+      transcript: transcript,
       setError,
     });
   };
 
   const handleViewSummary = () => {
-    if (!t?.summary) {
+    if (!transcript?.summary) {
       return;
     }
 
@@ -115,22 +115,24 @@ export const TranscriptContent: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Transcript | {t.id}</title>
+        <title>Transcript | {transcript.id}</title>
         <meta name="robots" content="noindex, nofollow" />
         <link rel="canonical" href="https://transaudio.vercel.app/transcript" />
       </Helmet>
       <div>
         <div className="flex flex-col space-y-4">
-          <h1 className="text-lg font-bold">{id}</h1>
+          <h1 className="text-lg font-bold">{transcript.id}</h1>
           <div className="text-sm opacity-70">
-            <p>Created: {formatDate(t.created)}</p>
+            <p>Created: {formatDate(transcript.created)}</p>
             <p>
               Accuracy:{" "}
-              {t?.confidence ? (t?.confidence * 100).toFixed(2) + "%" : "-"}
+              {transcript?.confidence
+                ? (transcript?.confidence * 100).toFixed(2) + "%"
+                : "-"}
             </p>
           </div>
           <div className="flex flex-col gap-2">
-            <div>
+            <div className="flex flex-row space-x-2">
               <button
                 className="px-2 py-1 font-bold bg-light text-dark border-none"
                 type="button"
@@ -138,11 +140,18 @@ export const TranscriptContent: React.FC = () => {
               >
                 Download Transcript
               </button>
+              <button
+                className="px-2 py-1 border border-light bg-transparent"
+                type="button"
+                onClick={() => navigate(-1)}
+              >
+                Go Back
+              </button>
             </div>
-            {t?.summary && (
+            {transcript?.summary && (
               <div>
                 <button
-                  className="px-2 py-1 font-semibold border border-light bg-transparent"
+                  className="p-1 font-semibold underline bg-transparent opacity-75"
                   type="button"
                   onClick={handleViewSummary}
                 >
@@ -151,7 +160,7 @@ export const TranscriptContent: React.FC = () => {
               </div>
             )}
           </div>
-          <TranscriptViewer t={t} />
+          <TranscriptViewer t={transcript} />
         </div>
       </div>
     </>

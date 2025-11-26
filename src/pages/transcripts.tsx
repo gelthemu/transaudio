@@ -30,7 +30,9 @@ export const Transcripts: React.FC = () => {
   }, []);
 
   const handleView = (id: string, ss: string) => {
-    navigate(`/transcript?id=${id}&ss=${ss}`);
+    const referer = document.referrer || window.location.href;
+    const page_ref = referer.split("/").pop() || "home";
+    navigate(`/transcript?id=${id}&ss=${ss}&ref=${page_ref}`);
   };
 
   const handleDelete = async (id: string) => {
