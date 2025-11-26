@@ -112,7 +112,7 @@ export const ad58ad087edb98 = async (
     if (!response.ok) throw new Error(`HTTP error ${response.status}`);
 
     const result = await response.json();
-    return { result };
+    return result;
   } catch {
     return null;
   }

@@ -47,7 +47,7 @@ export default async function getTranscript(
     const response = await s3Client.send(command);
     const bodyContents = await response.Body?.transformToString();
     const data = JSON.parse(bodyContents || "{}");
-    res.status(200).json({ data });
+    res.status(200).json(data);
   } catch {
     res.status(500).json({ status: "failed", error: "internal server error" });
   }
