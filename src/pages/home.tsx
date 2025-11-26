@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { getSession } from "../utils/session-manager";
-import { ab3d2d3c1f7417, ac41bedb6ec4a9 } from "../utils/aai-fxns";
+import {
+  ab3d2d3c1f7417,
+  ab685aebf914a0,
+  ac41bedb6ec4a9,
+} from "../utils/aai-fxns";
 import {
   saveTranscript,
   getTranscriptsBySession,
@@ -119,14 +123,29 @@ export const Home: React.FC = () => {
           }
         );
 
-        if (uploadResult.status !== "success" || !uploadResult.url) {
+        if (uploadResult.status !== "success") {
           throw new Error("File upload failed.");
         }
 
-        setAudioUrl(uploadResult.url);
+        setUploadProgress(100);
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        const accessUrlResult = await ab685aebf914a0(key);
+
+        if (accessUrlResult.status !== "success") {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          const retryResult = await ab685aebf914a0(key);
+
+          if (retryResult.status !== "success") {
+            throw new Error("Failed to generate access URL.");
+          }
+          setAudioUrl(retryResult.url);
+        } else {
+          setAudioUrl(accessUrlResult.url);
+        }
 
         setCurrentStep("processing");
-        setUploadProgress(100);
+        await new Promise((resolve) => setTimeout(resolve, 1000));
 
         const response = await ac41bedb6ec4a9(audioUrl);
 
@@ -135,11 +154,13 @@ export const Home: React.FC = () => {
         }
 
         setCurrentStep("completed");
-
-        const redirect_id = await saveTranscript(session, response.id);
-
+        const id = await saveTranscript(session, response.id);
         setTranscriptCount((prev) => prev + 1);
-        navigate(`/transcript?id=${redirect_id}&ss=${session}`);
+        await new Promise((resolve) => setTimeout(resolve, 7500));
+
+        const referer = document.referrer || window.location.href;
+        const page_ref = referer.split("/").pop() || "home";
+        navigate(`/transcript?id=${id}&ss=${session}&ref=${page_ref}`);
         return;
       } else if (inputMethod === "url") {
         setCurrentStep("processing");
@@ -152,11 +173,14 @@ export const Home: React.FC = () => {
         }
 
         setCurrentStep("completed");
-
-        const redirect_id = await saveTranscript(session, response.id);
-
+        const id = await saveTranscript(session, response.id);
         setTranscriptCount((prev) => prev + 1);
-        navigate(`/transcript?id=${redirect_id}&ss=${session}`);
+        await new Promise((resolve) => setTimeout(resolve, 7500));
+
+        const referer = document.referrer || window.location.href;
+        const page_ref = referer.split("/").pop() || "home";
+        navigate(`/transcript?id=${id}&ss=${session}&ref=${page_ref}`);
+        return;
       } else {
         throw new Error("No input method selected.");
       }

@@ -4,15 +4,13 @@ type TranscriptionStartResult = {
   status: "success" | "failed";
   id?: string;
 };
-type UploadUrlResult =
-  | { status: "success"; url: string }
-  | { status: "failed" };
+type UrlResult = { status: "success"; url: string } | { status: "failed" };
 
 export async function ab3d2d3c1f7417(
   file: File,
   key: string,
   onProgress?: (progress: UploadProgress) => void
-): Promise<UploadUrlResult> {
+): Promise<UrlResult> {
   try {
     const response = await fetch(
       "/api/adfbd7d-e348-4d92-90db-6a1f1041499d/ab3d2d3-c1f7-417b-9762-282b7810e661",
@@ -28,8 +26,8 @@ export async function ab3d2d3c1f7417(
 
     if (!response.ok) return { status: "failed" };
 
-    const { status, uploadUrl, fileUrl } = await response.json();
-    if (status !== "success" || !uploadUrl || !fileUrl) {
+    const { status, url } = await response.json();
+    if (status !== "success" || !url || typeof url !== "string") {
       return { status: "failed" };
     }
 
@@ -58,17 +56,41 @@ export async function ab3d2d3c1f7417(
       xhr.addEventListener("error", () => reject(new Error("network error")));
       xhr.addEventListener("timeout", () => reject(new Error("timeout")));
 
-      xhr.open("PUT", uploadUrl);
+      xhr.open("PUT", url);
       xhr.setRequestHeader("Content-Type", file.type);
       xhr.timeout = 600000;
       xhr.send(file);
     });
 
-    return { status: "success", url: fileUrl };
+    return { status: "success", url: "..." };
   } catch {
     return { status: "failed" };
   }
 }
+
+export const ab685aebf914a0 = async (key: string): Promise<UrlResult> => {
+  try {
+    const response = await fetch(
+      "/api/adfbd7d-e348-4d92-90db-6a1f1041499d/ab685ae-bf91-4a0e-b3fd-b398be978464",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key }),
+      }
+    );
+
+    if (!response.ok) return { status: "failed" };
+
+    const { status, url } = await response.json();
+    if (status !== "success" || !url || typeof url !== "string") {
+      return { status: "failed" };
+    }
+
+    return { status: "success", url };
+  } catch {
+    return { status: "failed" };
+  }
+};
 
 export const ac41bedb6ec4a9 = async (
   audioUrl: string

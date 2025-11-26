@@ -1,7 +1,4 @@
-import {
-  S3Client,
-  PutObjectCommand,
-} from "@aws-sdk/client-s3";
+import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 
@@ -15,36 +12,26 @@ const s3Client = new S3Client({
   },
 });
 
-export default async function generateUploadUrl(
+export default async function generateGetUrl(
   req: VercelRequest,
   res: VercelResponse
 ) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-    return;
-  }
-
   if (req.method !== "POST") {
     return res.status(405).json({ status: "failed" });
   }
 
   try {
-    const { key, contentType } = req.body;
+    const { key } = req.body;
 
-    if (!key || !contentType || !BUCKET_NAME) {
+    if (!key || !BUCKET_NAME) {
       return res.status(400).json({ status: "failed" });
     }
 
     const objectKey = `uploads/${key}`;
 
-    const command = new PutObjectCommand({
+    const command = new GetObjectCommand({
       Bucket: BUCKET_NAME,
       Key: objectKey,
-      ContentType: contentType,
     });
 
     const url = await getSignedUrl(s3Client, command, {
