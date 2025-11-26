@@ -119,11 +119,11 @@ export const Home: React.FC = () => {
           }
         );
 
-        if (uploadResult.status !== "success" || !uploadResult.fileUrl) {
+        if (uploadResult.status !== "success" || !uploadResult.url) {
           throw new Error("File upload failed.");
         }
 
-        setAudioUrl(uploadResult.fileUrl);
+        setAudioUrl(uploadResult.url);
 
         setCurrentStep("processing");
         setUploadProgress(100);
@@ -192,7 +192,7 @@ export const Home: React.FC = () => {
         <link rel="canonical" href="https://transaudio.vercel.app/home" />
       </Helmet>
       <div className="flex flex-col space-y-4">
-        {currentStep === "initial" && (
+        {currentStep === "initial" && !error && (
           <div>
             {!inputMethod ? (
               <div>
@@ -294,19 +294,40 @@ export const Home: React.FC = () => {
             )}
           </div>
         )}
-        {(currentStep === "uploading" || currentStep === "processing") && (
-          <div className="flex flex-row items-center space-x-2">
-            <Spinner />
-            <p className="text-sm font-semibold">
-              {currentStep === "uploading"
-                ? `Uploading... ${uploadProgress}%`
-                : "Processing..."}
-            </p>
-          </div>
-        )}
+        {(currentStep === "uploading" || currentStep === "processing") &&
+          !error && (
+            <div className="flex flex-col space-y-4">
+              {selectedFile && (
+                <div>
+                  <p className="opacity-80">File: {selectedFile.name} MB</p>
+                </div>
+              )}
+              <div className="flex flex-row items-center space-x-2">
+                <Spinner />
+                <p className="text-sm font-semibold">
+                  {currentStep === "uploading"
+                    ? `Uploading... ${uploadProgress}%`
+                    : "Processing..."}
+                </p>
+              </div>
+            </div>
+          )}
         {error && (
-          <div>
-            <p className="text-red">Error: {error}</p>
+          <div className="flex flex-col space-y-2">
+            <div>
+              <p className="">
+                Error: <span className="text-red font-bold">{error}</span>
+              </p>
+            </div>
+            <div>
+              <button
+                className="px-2 py-1 border border-light bg-transparent"
+                type="button"
+                onClick={handleReset}
+              >
+                Start again . . .
+              </button>
+            </div>
           </div>
         )}
       </div>

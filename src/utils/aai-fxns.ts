@@ -1,4 +1,4 @@
-import { UploadProgress, FinalTranscript } from "../types";
+import { UploadProgress, TranscriptResponse } from "../types";
 
 type TranscriptionStartResult = {
   status: "success" | "failed";
@@ -98,7 +98,7 @@ export const ac41bedb6ec4a9 = async (
 
 export const ad58ad087edb98 = async (
   id: string
-): Promise<FinalTranscript | null> => {
+): Promise<TranscriptResponse | null> => {
   try {
     const response = await fetch(
       "/api/adfbd7d-e348-4d92-90db-6a1f1041499d/ad58ad087ed-b989-4257-88cc-e11a8b78",
