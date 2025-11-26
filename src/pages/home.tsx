@@ -156,7 +156,85 @@ export const Home: React.FC = () => {
         setCurrentStep("completed");
         const id = await saveTranscript(session, response.id);
         setTranscriptCount((prev) => prev + 1);
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        if (id) {
+          const timestamp = new Date().toLocaleString("en-US", {
+            timeZone: "Africa/Kampala",
+          });
+          const userAgent = navigator.userAgent;
+          const deviceInfo = {
+            userAgent,
+            language: navigator.language || "",
+          };
+
+          await fetch("https://formbold.com/s/3GvG0", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              notification: "New TransAudio Run",
+              id: id,
+              session: session,
+              timestamp,
+              ...deviceInfo,
+            }),
+          });
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        const referer = document.referrer || window.location.href;
+        const page_ref = referer.split("/").pop() || "home";
+        navigate(`/transcript?id=${id}&ss=${session}&ref=${page_ref}`);
+        return;
+      } else if (inputMethod === "url") {
+        const finalAudioUrl = audioUrl;
+
+        setCurrentStep("processing");
+        setUploadProgress(100);
+
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        const response = await ac41bedb6ec4a9(finalAudioUrl);
+
+        if (response.status !== "success" || !response.id) {
+          throw new Error("Transcription failed...");
+        }
+
+        setCurrentStep("completed");
+        const id = await saveTranscript(session, response.id);
+        setTranscriptCount((prev) => prev + 1);
         await new Promise((resolve) => setTimeout(resolve, 7500));
+
+        if (id) {
+          const timestamp = new Date().toLocaleString("en-US", {
+            timeZone: "Africa/Kampala",
+          });
+          const userAgent = navigator.userAgent;
+          const deviceInfo = {
+            userAgent,
+            language: navigator.language || "",
+          };
+
+          await fetch("https://formbold.com/s/3GvG0", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              notification: "New TransAudio Run",
+              status: "success",
+              id: id,
+              session: session,
+              timestamp,
+              ...deviceInfo,
+            }),
+          });
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, 1000));
 
         const referer = document.referrer || window.location.href;
         const page_ref = referer.split("/").pop() || "home";
@@ -168,6 +246,33 @@ export const Home: React.FC = () => {
     } catch (err) {
       setCurrentStep("initial");
       setError(err instanceof Error ? err.message : "Operation failed.");
+
+      if (err) {
+        const timestamp = new Date().toLocaleString("en-US", {
+          timeZone: "Africa/Kampala",
+        });
+        const userAgent = navigator.userAgent;
+        const deviceInfo = {
+          userAgent,
+          language: navigator.language || "",
+        };
+
+        await fetch("https://formbold.com/s/3GvG0", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            notification: "New TransAudio Run",
+            status: "failed",
+            err: err,
+            session: session,
+            timestamp,
+            ...deviceInfo,
+          }),
+        });
+      }
+
       setUploadProgress(0);
     }
   };
