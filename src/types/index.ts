@@ -12,12 +12,12 @@ export interface Utterance {
 }
 
 export interface TranscriptResponse {
+  id: string;
+  created: number;
+  confidence?: number;
+  summary: string;
   words?: TranscriptWord[];
   utterances?: Utterance[];
-  confidence?: number;
-  id: string;
-  summary: string;
-  created: number;
 }
 
 export interface UploadProgress {
