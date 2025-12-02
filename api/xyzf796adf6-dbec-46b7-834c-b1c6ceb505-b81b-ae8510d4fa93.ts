@@ -20,11 +20,9 @@ export default async function getUserData(
   );
 
   try {
-    // Get client IP (Vercel provides it in headers)
     const ip =
       req.headers["x-forwarded-for"]?.toString().split(",")[0].trim() ||
       req.headers["x-real-ip"]?.toString() ||
-      // Fallback (should rarely happen on Vercel)
       req.socket?.remoteAddress ||
       null;
 
@@ -34,7 +32,6 @@ export default async function getUserData(
         .json({ status: "failed", message: "IP not detectable" });
     }
 
-    // Fetch geolocation from ipwho.is (free, no keyless)
     const response = await fetch(
       `https://ipwho.is/${ip}?fields=ip,city,region,country,continent,postal,latitude,longitude,timezone,connection`
     );

@@ -46,7 +46,7 @@ export default async function transcribeAudio(
       audio_url: audioUrl,
       speaker_labels: true,
       content_safety: true,
-      disfluencies: true,
+      disfluencies: false,
     };
     const startResp = await fetch("https://api.assemblyai.com/v2/transcript", {
       method: "POST",
