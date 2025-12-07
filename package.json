@@ -18,6 +18,7 @@
     "@types/formidable": "^3.4.5",
     "@vercel/node": "^5.3.23",
     "assemblyai": "^4.16.1",
+    "docx": "^8.5.0",
     "formidable": "^3.5.4",
     "lucide-react": "^0.344.0",
     "react": "^18.3.1",
