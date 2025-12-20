@@ -335,10 +335,10 @@ export const deleteAllTranscripts = async (): Promise<number> => {
 
 // deleteAllTranscripts();
 
-saveTranscript(
-  "transaudio-5ba5d3b8-d10a-41c9-8d86-6f56e365f6c3",
-  "43391386-c6c2-4083-9597-53dc231f8b90"
-);
+// saveTranscript(
+//   "transaudio-5ba5d3b8-d10a-41c9-8d86-6f56e365f6c3",
+//   "43391386-c6c2-4083-9597-53dc231f8b90"
+// );
 
 // deleteTranscriptById(
 //   "5e13cdaa-1e80-4b12-be5f-05aa4f834ffb-p9az0x6e-1758532243657"
