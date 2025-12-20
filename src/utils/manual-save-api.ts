@@ -12,9 +12,7 @@ import { getSession } from "./session-manager";
  * // Usage in browser console or code:
  * await save("43391386-c6c2-4083-9597-53dc231f8b90");
  */
-export const save = async (
-  transcriptId: string
-): Promise<string> => {
+export const save = async (transcriptId: string): Promise<string> => {
   const session = getSession();
 
   try {
