@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { StoredTranscript } from "../types";
 import { getSession } from "../utils/session-manager";
 import {
   getTranscriptsBySession,
@@ -7,24 +6,27 @@ import {
 } from "../utils/indexed-db-manager";
 
 export const Progress: React.FC = () => {
-  const [transcripts, setTranscripts] = useState<StoredTranscript[]>([]);
+  const [transcriptCount, setTranscriptCount] = useState(0);
+
+  const session_id = getSession();
 
   useEffect(() => {
     const loadTranscripts = async () => {
-      const id = getSession();
       await cleanExpiredTranscripts();
-      const storedTranscripts = await getTranscriptsBySession(id);
-      setTranscripts(storedTranscripts);
+      const transcripts = await getTranscriptsBySession(session_id);
+      setTranscriptCount(transcripts.length);
     };
+
+    loadTranscripts();
 
     const interval = setInterval(() => {
       loadTranscripts();
-    }, 7500);
+    }, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [session_id]);
 
-  const decimal = Math.min(transcripts.length / 10, 1);
+  const decimal = Math.min(transcriptCount / 10, 1);
   const filledBars = Math.floor(decimal * 10);
   const emptyBars = 10 - filledBars;
 
@@ -40,7 +42,7 @@ export const Progress: React.FC = () => {
           <span className="font-bold">{decimal.toFixed(2)}</span>
         </div>
       </div>
-      {transcripts.length >= 1 && (
+      {transcriptCount >= 1 && (
         <div>
           <a href="/transcripts" className="underline">
             View all transcripts
