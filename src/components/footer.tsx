@@ -15,14 +15,14 @@ export const Footer: React.FC = () => {
   const day = currentDate.getDate();
 
   return (
-    <footer className="flex flex-col space-y-4 p-1 text-sm opacity-70">
+    <footer className="relative flex flex-col space-y-4 p-1 text-sm opacity-70">
       <div>Session ID: {session}</div>
       <div>
         <span>
           {month} {day}, {year} {" | "} TransAudio
         </span>
       </div>
-      {/* <div className="sr-only">await save("id")</div> */}
+      <div className="sr-only">await save("id")</div>
     </footer>
   );
 };
