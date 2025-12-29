@@ -47,6 +47,13 @@ export default async function transcribeAudio(
       speaker_labels: true,
       content_safety: true,
       disfluencies: false,
+      filter_profanity: true,
+      language_code: "en",
+      punctuate: true,
+      format_text: true,
+      summarization: true,
+      summary_type: "bullets",
+      summary_model: "informative",
     };
     const startResp = await fetch("https://api.assemblyai.com/v2/transcript", {
       method: "POST",
@@ -83,42 +90,42 @@ export default async function transcribeAudio(
       status = polled.status;
 
       if (status === "completed") {
-        let summary_text = "";
-        try {
-          const lemurData = {
-            transcript_ids: [polled.id],
-            final_model: "anthropic/claude-sonnet-4-20250514",
-            max_output_size: 2000,
-            temperature: 0.5,
-          };
+        // let summary_text = "";
+        // try {
+        //   const lemurData = {
+        //     transcript_ids: [polled.id],
+        //     final_model: "anthropic/claude-sonnet-4-20250514",
+        //     max_output_size: 2000,
+        //     temperature: 0.5,
+        //   };
 
-          const lemurResp = await fetch(
-            "https://api.assemblyai.com/lemur/v3/generate/summary",
-            {
-              method: "POST",
-              headers: {
-                Authorization: `${API_KEY}`,
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(lemurData),
-            }
-          );
+        //   const lemurResp = await fetch(
+        //     "https://api.assemblyai.com/lemur/v3/generate/summary",
+        //     {
+        //       method: "POST",
+        //       headers: {
+        //         Authorization: `${API_KEY}`,
+        //         "Content-Type": "application/json",
+        //       },
+        //       body: JSON.stringify(lemurData),
+        //     }
+        //   );
 
-          if (lemurResp.ok) {
-            const summary = await lemurResp.json();
-            summary_text = summary.response;
-          } else {
-            summary_text = "";
-          }
-        } catch {
-          summary_text = "";
-        }
+        //   if (lemurResp.ok) {
+        //     const summary = await lemurResp.json();
+        //     summary_text = summary.response;
+        //   } else {
+        //     summary_text = "";
+        //   }
+        // } catch {
+        //   summary_text = "";
+        // }
 
         const completeTranscript = {
           id: transcriptId,
           created: Date.now(),
           confidence: polled.confidence,
-          summary: summary_text,
+          summary: polled.summary,
           words:
             polled.words?.map((w: TranscriptWord) => ({
               text: w.text,
@@ -136,7 +143,7 @@ export default async function transcribeAudio(
                   start: w.start,
                   end: w.end,
                 })) || [],
-            })) || [],  
+            })) || [],
         };
 
         const jsonKey = `transcripts/${transcriptId}.json`;

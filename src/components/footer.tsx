@@ -22,6 +22,7 @@ export const Footer: React.FC = () => {
           {month} {day}, {year} {" | "} TransAudio
         </span>
       </div>
+      {/* <div className="sr-only">await save("id")</div> */}
     </footer>
   );
 };

@@ -66,7 +66,6 @@ const createWordDocument = async (transcriptText: string): Promise<Blob> => {
             }),
             new TextRun({
               text: `[${timestamp}]`,
-              italics: true,
               font: "Calibri",
               size: 20,
             }),
@@ -112,7 +111,6 @@ const createWordDocument = async (transcriptText: string): Promise<Blob> => {
             }),
             new TextRun({
               text: `[${startTime}]`,
-              italics: true,
               font: "Calibri",
               size: 20,
             }),
