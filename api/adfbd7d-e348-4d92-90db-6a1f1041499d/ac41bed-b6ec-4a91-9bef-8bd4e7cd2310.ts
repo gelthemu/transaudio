@@ -1,6 +1,6 @@
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { Utterance, TranscriptWord } from "../../src/types/index.ts";
+import { Utterance, TranscriptWord } from "../../src/types/index.js";
 
 const BUCKET_NAME = process.env.S3_BUCKET;
 const API_KEY = process.env.TRANSAUDIO_API_KEY;
