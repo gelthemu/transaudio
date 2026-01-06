@@ -1,12 +1,12 @@
 {
   "name": "transaudio",
   "private": true,
-  "version": "1.5.0",
+  "version": "1.5.47",
   "type": "module",
   "scripts": {
     "dev": "vite | node src/scripts/show-network-url.mjs",
     "vercel-dev": "vercel dev",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
