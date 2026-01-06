@@ -167,17 +167,20 @@ const createWordDocument = async (transcriptText: string): Promise<Blob> => {
     i++;
   }
 
-  const doc = new Document({
-    sections: [
-      {
-        properties: {
-          default: {
-            font: {
-              name: "Calibri",
-              size: 28,
-            },
+    const doc = new Document({
+    styles: {
+      default: {
+        document: {
+          run: {
+            font: "Calibri",
+            size: 28,
           },
         },
+      },
+    },
+    sections: [
+      {
+        properties: {},
         children: paragraphs,
       },
     ],
