@@ -165,26 +165,23 @@ export const Home: React.FC = () => {
             language: navigator.language || "",
           };
 
-          await fetch(
-            `${process.env.API_URL}/api/cfmpulse/notice`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
+          await fetch(`${import.meta.env.VITE_API_URL}/api/cfmpulse/notice`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              code: "6lE8y",
+              text: "New Run",
+              userAgent: deviceInfo.userAgent,
+              language: deviceInfo.language,
+              payload: {
+                status: "success",
+                id: id,
+                session: session,
               },
-              body: JSON.stringify({
-                code: "6lE8y",
-                text: "New Run",
-                userAgent: deviceInfo.userAgent,
-                language: deviceInfo.language,
-                payload: {
-                  status: "success",
-                  id: id,
-                  session: session,
-                },
-              }),
-            }
-          );
+            }),
+          });
         }
 
         await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -219,26 +216,23 @@ export const Home: React.FC = () => {
             language: navigator.language || "",
           };
 
-          await fetch(
-            `${process.env.API_URL}/api/cfmpulse/notice`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
+          await fetch(`${import.meta.env.VITE_API_URL}/api/cfmpulse/notice`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              code: "6lE8y",
+              text: "New Run",
+              userAgent: deviceInfo.userAgent,
+              language: deviceInfo.language,
+              payload: {
+                status: "success",
+                id: id,
+                session: session,
               },
-              body: JSON.stringify({
-                code: "6lE8y",
-                text: "New Run",
-                userAgent: deviceInfo.userAgent,
-                language: deviceInfo.language,
-                payload: {
-                  status: "success",
-                  id: id,
-                  session: session,
-                },
-              }),
-            }
-          );
+            }),
+          });
         }
 
         await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -261,7 +255,7 @@ export const Home: React.FC = () => {
           language: navigator.language || "",
         };
 
-        await fetch(`${process.env.API_URL}/api/cfmpulse/notice`, {
+        await fetch(`${import.meta.env.VITE_API_URL}/api/cfmpulse/notice`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
