@@ -159,28 +159,32 @@ export const Home: React.FC = () => {
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
         if (id) {
-          const timestamp = new Date().toLocaleString("en-US", {
-            timeZone: "Africa/Kampala",
-          });
           const userAgent = navigator.userAgent;
           const deviceInfo = {
             userAgent,
             language: navigator.language || "",
           };
 
-          await fetch("https://formbold.com/s/6lE8y", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              notification: "New TransAudio Run",
-              id: id,
-              session: session,
-              timestamp,
-              ...deviceInfo,
-            }),
-          });
+          await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/cfmpulse/notice`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                code: "6lE8y",
+                text: "New Run",
+                userAgent: deviceInfo.userAgent,
+                language: deviceInfo.language,
+                payload: {
+                  status: "success",
+                  id: id,
+                  session: session,
+                },
+              }),
+            }
+          );
         }
 
         await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -209,29 +213,32 @@ export const Home: React.FC = () => {
         await new Promise((resolve) => setTimeout(resolve, 7500));
 
         if (id) {
-          const timestamp = new Date().toLocaleString("en-US", {
-            timeZone: "Africa/Kampala",
-          });
           const userAgent = navigator.userAgent;
           const deviceInfo = {
             userAgent,
             language: navigator.language || "",
           };
 
-          await fetch("https://formbold.com/s/6lE8y", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              notification: "New TransAudio Run",
-              status: "success",
-              id: id,
-              session: session,
-              timestamp,
-              ...deviceInfo,
-            }),
-          });
+          await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/cfmpulse/notice`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                code: "6lE8y",
+                text: "New Run",
+                userAgent: deviceInfo.userAgent,
+                language: deviceInfo.language,
+                payload: {
+                  status: "success",
+                  id: id,
+                  session: session,
+                },
+              }),
+            }
+          );
         }
 
         await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -248,27 +255,27 @@ export const Home: React.FC = () => {
       setError(err instanceof Error ? err.message : "Operation failed.");
 
       if (err) {
-        const timestamp = new Date().toLocaleString("en-US", {
-          timeZone: "Africa/Kampala",
-        });
         const userAgent = navigator.userAgent;
         const deviceInfo = {
           userAgent,
           language: navigator.language || "",
         };
 
-        await fetch("https://formbold.com/s/6lE8y", {
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cfmpulse/notice`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            notification: "New TransAudio Run",
-            status: "failed",
-            err: err,
-            session: session,
-            timestamp,
-            ...deviceInfo,
+            code: "6lE8y",
+            text: "New Run",
+            userAgent: deviceInfo.userAgent,
+            language: deviceInfo.language,
+            payload: {
+              status: "failed",
+              err: err,
+              session: session,
+            },
           }),
         });
       }
