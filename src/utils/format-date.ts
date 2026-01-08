@@ -3,7 +3,7 @@ export const formatDate = (input: number | string): string => {
   const date = new Date(timestamp);
 
   if (isNaN(date.getTime())) {
-    throw new Error(`Invalid date. Input: ${input}, Parsed: ${timestamp}`);
+    throw new Error(`Invalid date.`);
   }
 
   const dateOptions: Intl.DateTimeFormatOptions = {
