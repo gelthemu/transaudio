@@ -166,7 +166,7 @@ export const Home: React.FC = () => {
           };
 
           await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/cfmpulse/notice`,
+            `${process.env.API_URL}/api/cfmpulse/notice`,
             {
               method: "POST",
               headers: {
@@ -220,7 +220,7 @@ export const Home: React.FC = () => {
           };
 
           await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/cfmpulse/notice`,
+            `${process.env.API_URL}/api/cfmpulse/notice`,
             {
               method: "POST",
               headers: {
@@ -261,7 +261,7 @@ export const Home: React.FC = () => {
           language: navigator.language || "",
         };
 
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cfmpulse/notice`, {
+        await fetch(`${process.env.API_URL}/api/cfmpulse/notice`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
