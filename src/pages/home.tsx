@@ -159,24 +159,14 @@ export const Home: React.FC = () => {
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
         if (id) {
-          const userAgent = navigator.userAgent;
-          const deviceInfo = {
-            userAgent,
-            language: navigator.language || "",
-          };
-
-          await fetch(`${import.meta.env.VITE_API_URL}/api/cfmpulse/notice`, {
+          await fetch(`${import.meta.env.VITE_API_URL}/api/notice`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
               code: "6lE8y",
-              text: "New Run",
-              userAgent: deviceInfo.userAgent,
-              language: deviceInfo.language,
               payload: {
-                status: "success",
                 id: id,
                 session: session,
               },
@@ -210,24 +200,14 @@ export const Home: React.FC = () => {
         await new Promise((resolve) => setTimeout(resolve, 7500));
 
         if (id) {
-          const userAgent = navigator.userAgent;
-          const deviceInfo = {
-            userAgent,
-            language: navigator.language || "",
-          };
-
-          await fetch(`${import.meta.env.VITE_API_URL}/api/cfmpulse/notice`, {
+          await fetch(`${import.meta.env.VITE_API_URL}/api/notice`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
               code: "6lE8y",
-              text: "New Run",
-              userAgent: deviceInfo.userAgent,
-              language: deviceInfo.language,
               payload: {
-                status: "success",
                 id: id,
                 session: session,
               },
@@ -249,24 +229,14 @@ export const Home: React.FC = () => {
       setError(err instanceof Error ? err.message : "Operation failed.");
 
       if (err) {
-        const userAgent = navigator.userAgent;
-        const deviceInfo = {
-          userAgent,
-          language: navigator.language || "",
-        };
-
-        await fetch(`${import.meta.env.VITE_API_URL}/api/cfmpulse/notice`, {
+        await fetch(`${import.meta.env.VITE_API_URL}/api/notice`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
             code: "6lE8y",
-            text: "New Run",
-            userAgent: deviceInfo.userAgent,
-            language: deviceInfo.language,
             payload: {
-              status: "failed",
               err: err,
               session: session,
             },
