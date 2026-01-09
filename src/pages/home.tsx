@@ -18,6 +18,17 @@ import { Spinner } from "../components/spinner";
 type InputMethod = "file" | "url" | null;
 type AppStep = "initial" | "uploading" | "processing" | "completed";
 
+const sendNotice = async (params: Record<string, string>) => {
+  try {
+    const queryParams = new URLSearchParams(params);
+    await fetch(
+      `${import.meta.env.VITE_API_URL}/api/notice?${queryParams.toString()}`
+    );
+  } catch {
+    // fail silently
+  }
+};
+
 export const Home: React.FC = () => {
   const navigate = useNavigate();
   const [session, setSession] = useState<string>("");
@@ -79,6 +90,36 @@ export const Home: React.FC = () => {
     setError("");
   };
 
+  const processTranscription = async (finalAudioUrl: string) => {
+    setCurrentStep("processing");
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    const response = await ac41bedb6ec4a9(finalAudioUrl);
+
+    if (response.status !== "success" || !response.id) {
+      throw new Error("Transcription failed...");
+    }
+
+    setCurrentStep("completed");
+    const id = await saveTranscript(session, response.id);
+    setTranscriptCount((prev) => prev + 1);
+
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+
+    if (id) {
+      await sendNotice({
+        code: "6lE8y",
+        id: id,
+      });
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    const referer = document.referrer || window.location.href;
+    const page_ref = referer.split("/").pop() || "home";
+    navigate(`/transcript?id=${id}&ss=${session}&ref=${page_ref}`);
+  };
+
   const handleStartTranscription = async () => {
     if (transcriptCount >= 10) {
       setError("Limit reached. Please delete some old transcripts...");
@@ -105,7 +146,7 @@ export const Home: React.FC = () => {
     setCurrentStep("uploading");
 
     try {
-      let key: string;
+      let finalAudioUrl: string;
 
       if (inputMethod === "file" && selectedFile) {
         const random_id = generateRandomId();
@@ -113,7 +154,7 @@ export const Home: React.FC = () => {
           .toLowerCase()
           .replace(/[^a-z0-9.]+/g, "-")
           .replace(/^-+|-+$/g, "");
-        key = `${random_id}-${sanitized_name}`;
+        const key = `${random_id}-${sanitized_name}`;
 
         const uploadResult = await ab3d2d3c1f7417(
           selectedFile,
@@ -141,108 +182,24 @@ export const Home: React.FC = () => {
           }
         }
 
-        const finalAudioUrl = accessUrlResult.url;
+        finalAudioUrl = accessUrlResult.url;
         setAudioUrl(finalAudioUrl);
-
-        setCurrentStep("processing");
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        const response = await ac41bedb6ec4a9(finalAudioUrl);
-
-        if (response.status !== "success" || !response.id) {
-          throw new Error("Transcription failed...");
-        }
-
-        setCurrentStep("completed");
-        const id = await saveTranscript(session, response.id);
-        setTranscriptCount((prev) => prev + 1);
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        if (id) {
-          await fetch(`${import.meta.env.VITE_API_URL}/api/notice`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              code: "6lE8y",
-              payload: {
-                id: id,
-                session: session,
-              },
-            }),
-          });
-        }
-
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        const referer = document.referrer || window.location.href;
-        const page_ref = referer.split("/").pop() || "home";
-        navigate(`/transcript?id=${id}&ss=${session}&ref=${page_ref}`);
-        return;
       } else if (inputMethod === "url") {
-        const finalAudioUrl = audioUrl;
-
-        setCurrentStep("processing");
+        finalAudioUrl = audioUrl;
         setUploadProgress(100);
-
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        const response = await ac41bedb6ec4a9(finalAudioUrl);
-
-        if (response.status !== "success" || !response.id) {
-          throw new Error("Transcription failed...");
-        }
-
-        setCurrentStep("completed");
-        const id = await saveTranscript(session, response.id);
-        setTranscriptCount((prev) => prev + 1);
-        await new Promise((resolve) => setTimeout(resolve, 7500));
-
-        if (id) {
-          await fetch(`${import.meta.env.VITE_API_URL}/api/notice`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              code: "6lE8y",
-              payload: {
-                id: id,
-                session: session,
-              },
-            }),
-          });
-        }
-
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        const referer = document.referrer || window.location.href;
-        const page_ref = referer.split("/").pop() || "home";
-        navigate(`/transcript?id=${id}&ss=${session}&ref=${page_ref}`);
-        return;
       } else {
         throw new Error("No input method selected.");
       }
+
+      await processTranscription(finalAudioUrl);
     } catch (err) {
       setCurrentStep("initial");
       setError(err instanceof Error ? err.message : "Operation failed.");
 
-      if (err) {
-        await fetch(`${import.meta.env.VITE_API_URL}/api/notice`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            code: "6lE8y",
-            payload: {
-              err: err,
-              session: session,
-            },
-          }),
-        });
-      }
+      await sendNotice({
+        code: "6lE8y",
+        err: err instanceof Error ? err.message : "Unknown error",
+      });
 
       setUploadProgress(0);
     }
