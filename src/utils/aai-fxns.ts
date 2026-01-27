@@ -9,11 +9,11 @@ type UrlResult = { status: "success"; url: string } | { status: "failed" };
 export async function ab3d2d3c1f7417(
   file: File,
   key: string,
-  onProgress?: (progress: UploadProgress) => void
+  onProgress?: (progress: UploadProgress) => void,
 ): Promise<UrlResult> {
   try {
     const response = await fetch(
-      "/api/adfbd7d-e348-4d92-90db-6a1f1041499d/ab3d2d3-c1f7-417b-9762-282b7810e661",
+      `${import.meta.env.VITE_API_URL}/api/transaudio/api/adfbd7d-e348-4d92-90db-6a1f1041499d/ab3d2d3-c1f7-417b-9762-282b7810e661`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -21,7 +21,7 @@ export async function ab3d2d3c1f7417(
           key,
           contentType: file.type,
         }),
-      }
+      },
     );
 
     if (!response.ok) return { status: "failed" };
@@ -71,12 +71,12 @@ export async function ab3d2d3c1f7417(
 export const ab685aebf914a0 = async (key: string): Promise<UrlResult> => {
   try {
     const response = await fetch(
-      "/api/adfbd7d-e348-4d92-90db-6a1f1041499d/ab685ae-bf91-4a0e-b3fd-b398be978464",
+      `${import.meta.env.VITE_API_URL}/api/transaudio/adfbd7d-e348-4d92-90db-6a1f1041499d/ab685ae-bf91-4a0e-b3fd-b398be978464`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key }),
-      }
+      },
     );
 
     if (!response.ok) return { status: "failed" };
@@ -93,16 +93,16 @@ export const ab685aebf914a0 = async (key: string): Promise<UrlResult> => {
 };
 
 export const ac41bedb6ec4a9 = async (
-  audioUrl: string
+  audioUrl: string,
 ): Promise<TranscriptionStartResult> => {
   try {
     const start = await fetch(
-      "/api/adfbd7d-e348-4d92-90db-6a1f1041499d/ac41bed-b6ec-4a91-9bef-8bd4e7cd2310",
+      `${import.meta.env.VITE_API_URL}/api/transaudio/adfbd7d-e348-4d92-90db-6a1f1041499d/ac41bed-b6ec-4a91-9bef-8bd4e7cd2310`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ audioUrl }),
-      }
+      },
     );
 
     if (!start.ok) return { status: "failed" };
@@ -119,16 +119,16 @@ export const ac41bedb6ec4a9 = async (
 };
 
 export const ad58ad087edb98 = async (
-  id: string
+  id: string,
 ): Promise<TranscriptResponse | null> => {
   try {
     const response = await fetch(
-      "/api/adfbd7d-e348-4d92-90db-6a1f1041499d/ad58ad087ed-b989-4257-88cc-e11a8b78",
+      `${import.meta.env.VITE_API_URL}/api/transaudio/adfbd7d-e348-4d92-90db-6a1f1041499d/ad58ad087ed-b989-4257-88cc-e11a8b78`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id: id }),
-      }
+      },
     );
 
     if (!response.ok) throw new Error(`HTTP error ${response.status}`);
