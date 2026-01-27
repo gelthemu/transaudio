@@ -13,7 +13,7 @@ export async function ab3d2d3c1f7417(
 ): Promise<UrlResult> {
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/api/transaudio/api/adfbd7d-e348-4d92-90db-6a1f1041499d/ab3d2d3-c1f7-417b-9762-282b7810e661`,
+      `${import.meta.env.VITE_API_URL}/api/transaudio/adfbd7d/ab3d2d3`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -71,7 +71,7 @@ export async function ab3d2d3c1f7417(
 export const ab685aebf914a0 = async (key: string): Promise<UrlResult> => {
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/api/transaudio/adfbd7d-e348-4d92-90db-6a1f1041499d/ab685ae-bf91-4a0e-b3fd-b398be978464`,
+      `${import.meta.env.VITE_API_URL}/api/transaudio/adfbd7d/ab685ae`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -97,7 +97,7 @@ export const ac41bedb6ec4a9 = async (
 ): Promise<TranscriptionStartResult> => {
   try {
     const start = await fetch(
-      `${import.meta.env.VITE_API_URL}/api/transaudio/adfbd7d-e348-4d92-90db-6a1f1041499d/ac41bed-b6ec-4a91-9bef-8bd4e7cd2310`,
+      `${import.meta.env.VITE_API_URL}/api/transaudio/adfbd7d/ac41bed`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -123,7 +123,7 @@ export const ad58ad087edb98 = async (
 ): Promise<TranscriptResponse | null> => {
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/api/transaudio/adfbd7d-e348-4d92-90db-6a1f1041499d/ad58ad087ed-b989-4257-88cc-e11a8b78`,
+      `${import.meta.env.VITE_API_URL}/api/transaudio/adfbd7d/ad58ad0`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
