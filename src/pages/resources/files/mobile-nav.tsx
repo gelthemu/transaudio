@@ -1,4 +1,4 @@
-import { RefObject } from "react";
+import { useEffect, useState, useRef, RefObject } from "react";
 import { ChevronDown, MenuSquare, LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -30,9 +30,36 @@ export const MobileNav = ({
   scrollToSection,
   sortDropdownRef,
 }: MobileNavProps) => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [isStuck, setIsStuck] = useState(false);
+
+  useEffect(() => {
+    if (!sectionRef.current) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsStuck(entry.intersectionRatio < 1);
+      },
+      { threshold: [1], rootMargin: "0px 0px 0px 0px" },
+    );
+
+    observer.observe(sectionRef.current);
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section className="w-full sticky min-[820px]:hidden top-16 z-[30] bg-light/60 bg-blend-multiply backdrop-blur-md transaudio-dashed">
-      <div className="relative transaudio-container pb-8">
+    <section
+      ref={sectionRef}
+      className="w-full sticky min-[820px]:hidden top-16 z-[30] bg-light/60 bg-blend-multiply backdrop-blur-md transaudio-dashed"
+    >
+      <div
+        className={cn(
+          "relative transaudio-container",
+          isStuck ? "pt-8 pb-8" : "pb-8",
+          "transition-all duration-200",
+        )}
+      >
         <div className="relative flex flex-col sm:px-8 md:px-12">
           <div
             ref={sortDropdownRef}
