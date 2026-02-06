@@ -39,8 +39,10 @@ export const MobileNav = ({
     const observer = new IntersectionObserver(
       ([entry]) => {
         setIsStuck(entry.intersectionRatio < 1);
+
+        console.log("Stuck?", entry.intersectionRatio, entry.isIntersecting);
       },
-      { threshold: [1], rootMargin: "-1px 0px 0px 0px" },
+      { threshold: [1], rootMargin: `-65px 0px 0px 0px` },
     );
 
     observer.observe(sectionRef.current);
@@ -51,17 +53,16 @@ export const MobileNav = ({
   return (
     <section
       ref={sectionRef}
+      data-stuck={isStuck ? "" : undefined}
       className={cn(
         "w-full sticky min-[820px]:hidden top-16 z-[30] transition-all duration-300",
         "bg-light/60 bg-blend-multiply backdrop-blur-md transaudio-dashed",
-        isStuck ? "data-[stuck=true]" : "",
       )}
     >
       <div
         className={cn(
           "relative transaudio-container",
-          isStuck ? "pt-8" : "pb-0",
-          "pb-8 transition-all duration-300",
+          "data-[stuck]:pt-8 pb-8 transition-all duration-300",
         )}
       >
         <div className="relative flex flex-col sm:px-8 md:px-12">
