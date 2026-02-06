@@ -84,7 +84,7 @@ const Script: React.FC = () => {
             </Link>
             <span className="mx-2 text-sm">{">"}</span>
             <span className="text-brand/80 text-sm font-semibold">
-              ID: {id.slice(0, 6)} . . .
+              ID: {id.slice(0, 8)} . . .
             </span>
           </nav>
           <h1 className="mb-4 text-brand">{id}</h1>
