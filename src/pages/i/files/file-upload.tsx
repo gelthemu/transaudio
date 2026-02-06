@@ -12,6 +12,7 @@ interface FileUploadSectionProps {
   onDragLeave: (e: React.DragEvent<Element>) => void;
   onDragOver: (e: React.DragEvent<Element>) => void;
   onDrop: (e: React.DragEvent<Element>) => void;
+  disabled?: boolean;
 }
 
 const ACCEPTED_EXTENSIONS = [".mp3", ".m4a"];
@@ -25,6 +26,7 @@ export const FileUploadSection: React.FC<FileUploadSectionProps> = ({
   onDragLeave,
   onDragOver,
   onDrop,
+  disabled = false,
 }) => {
   return (
     <div
@@ -35,6 +37,7 @@ export const FileUploadSection: React.FC<FileUploadSectionProps> = ({
         dragActive
           ? "border-brand bg-brand/5"
           : "border-accent hover:border-brand/50 hover:bg-brand/5",
+        disabled ? "disabled" : "",
       )}
       onDragEnter={onDragEnter}
       onDragLeave={onDragLeave}
@@ -48,6 +51,7 @@ export const FileUploadSection: React.FC<FileUploadSectionProps> = ({
         accept={ACCEPTED_EXTENSIONS.join(",")}
         onChange={onFileSelect}
         className="hidden"
+        disabled={disabled}
       />
       <div className="flex flex-col items-center text-center">
         <div className={cn("p-4 mb-2 transition-all duration-200")}>

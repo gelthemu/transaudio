@@ -73,7 +73,7 @@ const Script: React.FC = () => {
         <meta name="robots" content="noindex, nofollow" />
         <link
           rel="canonical"
-          href={`https://transaudio.vercel.app/i/script?id=${id}&ss=${session}&dd=${created}`}
+          href={`https://transaudio.vercel.app/scripts/script?id=${id}&ss=${session}&dd=${created}`}
         />
       </Helmet>
       <HeroSection sr={false}>

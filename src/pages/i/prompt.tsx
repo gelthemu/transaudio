@@ -134,7 +134,7 @@ const Prompt: React.FC = () => {
       }
 
       setTimeout(() => {
-        navigate(`/i/script?id=${id}&ss=${session}&dd=${dd}`);
+        navigate(`/scripts/script?id=${id}&ss=${session}&dd=${dd}`);
       }, 500);
     } catch {
       setError("Failed. Try again");
@@ -258,6 +258,7 @@ const Prompt: React.FC = () => {
                     onDragLeave={handleDrag}
                     onDragOver={handleDrag}
                     onDrop={handleDrop}
+                    disabled={uploadState !== "idle"}
                   />
                 ) : (
                   <div>

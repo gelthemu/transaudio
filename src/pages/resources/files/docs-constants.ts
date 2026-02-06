@@ -18,7 +18,7 @@ export const sections = [
   { id: "getting-started", label: "Getting Started", icon: BookOpen },
   { id: "how-to-use", label: "How to Use TransAUDIO", icon: Settings },
   { id: "features", label: "Features & Capabilities", icon: Star },
-  { id: "faqs", label: "Frequently Asked Questions", icon: MessageSquare },
+  { id: "faqs", label: "FAQs", icon: MessageSquare },
   { id: "troubleshooting", label: "Troubleshooting", icon: AlertTriangle },
   { id: "contact", label: "Contact Support", icon: Phone },
 ];

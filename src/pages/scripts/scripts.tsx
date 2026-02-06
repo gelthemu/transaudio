@@ -38,7 +38,7 @@ const Scripts: React.FC = () => {
   }, []);
 
   const handleView = (id: string, ss: string, dd: number) => {
-    navigate(`/i/script?id=${id}&ss=${ss}&dd=${dd}`);
+    navigate(`/scripts/script?id=${id}&ss=${ss}&dd=${dd}`);
   };
 
   const handleDelete = async (id: string) => {
