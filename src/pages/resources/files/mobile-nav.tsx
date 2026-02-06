@@ -56,8 +56,8 @@ export const MobileNav = ({
       <div
         className={cn(
           "relative transaudio-container",
-          isStuck ? "pt-8 pb-8" : "pb-8",
-          "transition-all duration-200",
+          isStuck ? "pt-8" : "pb-0",
+          "pb-8 transition-all duration-200",
         )}
       >
         <div className="relative flex flex-col sm:px-8 md:px-12">
