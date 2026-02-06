@@ -312,7 +312,7 @@ const Prompt: React.FC = () => {
                       size="sm"
                       variant="outline"
                       onClick={handleViewClose}
-                      className="flex-1"
+                      className={cn("flex-1")}
                       disabled={uploadState !== "idle"}
                     >
                       Cancel
@@ -324,7 +324,13 @@ const Prompt: React.FC = () => {
                           ? handleUploadAndUrlSubmit
                           : handleViewClose
                       }
-                      className="flex-1"
+                      className={cn(
+                        "flex-1",
+                        uploadState === "complete" &&
+                          "!bg-success hover:!bg-success/90",
+                        uploadState === "error" &&
+                          "!bg-error hover:!bg-error/90",
+                      )}
                       disabled={
                         uploadState !== "idle" && uploadState !== "error"
                       }
@@ -336,7 +342,7 @@ const Prompt: React.FC = () => {
                           : uploadState === "complete"
                             ? "Completed..."
                             : uploadState === "error"
-                              ? "FAILED. Try again!"
+                              ? "Retry"
                               : "Transcribe"}
                     </Button>
                   </motion.div>
