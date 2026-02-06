@@ -31,7 +31,7 @@ export const MobileNav = ({
   sortDropdownRef,
 }: MobileNavProps) => {
   return (
-    <section className="w-full sticky min-[820px]:hidden top-16 z-50 bg-light/60 bg-blend-multiply backdrop-blur-md transaudio-dashed">
+    <section className="w-full sticky min-[820px]:hidden top-16 z-[30] bg-light/60 bg-blend-multiply backdrop-blur-md transaudio-dashed">
       <div className="relative transaudio-container pb-8">
         <div className="relative flex flex-col sm:px-8 md:px-12">
           <div
@@ -58,7 +58,7 @@ export const MobileNav = ({
               </span>
             </Button>
             {showSortDropdown && (
-              <div className="absolute right-0 left-0 top-full mt-1 bg-light border border-brand/50 shadow-xl z-[60]">
+              <div className="absolute right-0 left-0 top-full mt-1 bg-light border border-brand/50 shadow-xl z-[40]">
                 {sections.map((section) => (
                   <Button
                     key={section.id}
