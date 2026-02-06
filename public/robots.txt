@@ -1,9 +1,20 @@
-# *
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
 User-agent: *
 Allow: /
 Allow: /home
+Allow: /prompt
 
-# *
 User-agent: *
 Disallow: /
 Disallow: /api
@@ -13,8 +24,9 @@ Disallow: /transcript
 Disallow: /404
 Disallow: /500
 
-# Host
 Host: https://transaudio.vercel.app
 
-# Sitemaps
 Sitemap: https://transaudio.vercel.app/sitemap.xml
+
+
+

@@ -1,353 +1,128 @@
-import { StoredTranscript } from "../types";
+import Dexie, { type EntityTable } from "dexie";
+import { StoredScript } from "@/types";
 
-const DB_NAME = "transaudio";
-const DB_VERSION = 1;
-const STORE_NAME = "runs";
+class TransAudioDatabase extends Dexie {
+  runs!: EntityTable<StoredScript, "id">;
 
-export const initDB = (): Promise<IDBDatabase> => {
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, DB_VERSION);
+  constructor() {
+    super("transaudio");
+    this.version(1).stores({
+      runs: "id, session, created",
+    });
+  }
+}
 
-    request.onerror = () => reject(request.error);
-    request.onsuccess = () => resolve(request.result);
+const db = new TransAudioDatabase();
 
-    request.onupgradeneeded = (event) => {
-      const db = (event.target as IDBOpenDBRequest).result;
-      if (!db.objectStoreNames.contains(STORE_NAME)) {
-        const store = db.createObjectStore(STORE_NAME, { keyPath: "id" });
-        store.createIndex("session", "session", { unique: false });
-      }
-    };
-  });
-};
-
-export const saveTranscript = async (
+export const saveScript = async (
   session: string,
-  id: string
-): Promise<string> => {
-  const db = await initDB();
-
-  const st: StoredTranscript = {
+  id: string,
+): Promise<number> => {
+  const dd = Date.now();
+  const st: StoredScript = {
     session,
     id,
-    created: Date.now(),
+    created: dd,
   };
 
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction([STORE_NAME], "readwrite");
-    const store = transaction.objectStore(STORE_NAME);
-    const request = store.add(st);
+  await db.runs.add(st);
 
-    request.onerror = () => reject(request.error);
-    request.onsuccess = () => {
-      const currentCount = parseInt(localStorage.getItem("runs") || "0", 10);
-      localStorage.setItem("runs", String(currentCount + 1));
-      resolve(id);
-    };
-  });
+  return dd;
 };
 
-export const getTranscriptsBySession = async (
-  session: string
-): Promise<StoredTranscript[]> => {
-  const db = await initDB();
+export const getScriptsBySession = async (
+  session: string,
+): Promise<StoredScript[]> => {
+  const fiveDaysAgo = Date.now() - 5 * 24 * 60 * 60 * 1000;
 
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction([STORE_NAME], "readonly");
-    const store = transaction.objectStore(STORE_NAME);
-    const index = store.index("session");
-    const request = index.getAll(session);
+  const transcripts = await db.runs
+    .where("session")
+    .equals(session)
+    .and((t) => t.created >= fiveDaysAgo)
+    .reverse()
+    .sortBy("created");
 
-    request.onerror = () => reject(request.error);
-    request.onsuccess = () => {
-      const transcripts = request.result
-        .filter((t) => Date.now() - t.created < 5 * 24 * 60 * 60 * 1000)
-        .sort((a, b) => {
-          const dateA = new Date(a.created);
-          const dateB = new Date(b.created);
-          return dateB.getTime() - dateA.getTime();
-        })
-        .slice(0, 18);
-      resolve(transcripts);
-    };
-  });
+  return transcripts.slice(0, 18);
 };
 
-export const getTranscriptById = async (
-  id: string
-): Promise<StoredTranscript | null> => {
-  const db = await initDB();
+export const getScriptById = async (
+  id: string,
+): Promise<StoredScript | null> => {
+  const transcript = await db.runs.get(id);
 
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction([STORE_NAME], "readonly");
-    const store = transaction.objectStore(STORE_NAME);
-    const request = store.get(id);
+  if (!transcript) return null;
 
-    request.onerror = () => reject(request.error);
-    request.onsuccess = () => {
-      const transcript = request.result;
-      if (
-        transcript &&
-        Date.now() - transcript.created < 5 * 24 * 60 * 60 * 1000
-      ) {
-        resolve(transcript);
-      } else {
-        resolve(null);
-      }
-    };
-  });
+  const fiveDaysAgo = Date.now() - 5 * 24 * 60 * 60 * 1000;
+  if (transcript.created < fiveDaysAgo) {
+    return null;
+  }
+
+  return transcript;
 };
 
-export const cleanExpiredTranscripts = async (): Promise<void> => {
-  const db = await initDB();
+export const cleanExpiredScripts = async (): Promise<void> => {
+  const fiveDaysAgo = Date.now() - 5 * 24 * 60 * 60 * 1000;
 
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction([STORE_NAME], "readwrite");
-    const store = transaction.objectStore(STORE_NAME);
-    const request = store.getAll();
-
-    request.onerror = () => reject(request.error);
-    request.onsuccess = () => {
-      const transcripts = request.result;
-
-      transcripts.forEach((transcript) => {
-        if (Date.now() - transcript.created > 5 * 24 * 60 * 60 * 1000) {
-          store.delete(transcript.id);
-        }
-      });
-
-      resolve();
-    };
-  });
+  await db.runs.where("created").below(fiveDaysAgo).delete();
 };
 
-/**
- * Get ALL transcripts from the database (including expired ones)
- */
-export const getAllTranscripts = async (): Promise<StoredTranscript[]> => {
-  const db = await initDB();
+export const getAllScripts = async (): Promise<StoredScript[]> => {
+  const scripts = await db.runs
+    .orderBy("created")
+    .reverse()
+    .limit(18)
+    .toArray();
 
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction([STORE_NAME], "readonly");
-    const store = transaction.objectStore(STORE_NAME);
-    const request = store.getAll();
-
-    request.onerror = () => reject(request.error);
-    request.onsuccess = () => {
-      const sortedTranscripts = request.result
-        .filter((t) => t.created)
-        .sort((a, b) => {
-          const dateA = new Date(a.created);
-          const dateB = new Date(b.created);
-          return dateB.getTime() - dateA.getTime();
-        })
-        .slice(0, 18);
-      resolve(sortedTranscripts);
-    };
-  });
+  return scripts;
 };
 
-/**
- * Get ALL active (non-expired) transcripts from the database
- */
-export const getAllActiveTranscripts = async (): Promise<
-  StoredTranscript[]
-> => {
-  const db = await initDB();
+export const getAllActiveScripts = async (): Promise<StoredScript[]> => {
+  const fiveDaysAgo = Date.now() - 5 * 24 * 60 * 60 * 1000;
 
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction([STORE_NAME], "readonly");
-    const store = transaction.objectStore(STORE_NAME);
-    const request = store.getAll();
+  const transcripts = await db.runs
+    .where("created")
+    .aboveOrEqual(fiveDaysAgo)
+    .reverse()
+    .sortBy("created");
 
-    request.onerror = () => reject(request.error);
-    request.onsuccess = () => {
-      const transcripts = request.result
-        .filter((t) => Date.now() - t.created < 5 * 24 * 60 * 60 * 1000)
-        .sort((a, b) => {
-          const dateA = new Date(a.created);
-          const dateB = new Date(b.created);
-          return dateB.getTime() - dateA.getTime();
-        })
-        .slice(0, 18);
-      resolve(transcripts);
-    };
-  });
+  return transcripts.slice(0, 18);
 };
 
-/**
- * Get count of all transcripts in database (including expired ones)
- */
-export const getTranscriptCount = async (): Promise<number> => {
-  const db = await initDB();
-
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction([STORE_NAME], "readonly");
-    const store = transaction.objectStore(STORE_NAME);
-    const request = store.count();
-
-    request.onerror = () => reject(request.error);
-    request.onsuccess = () => resolve(request.result);
-  });
+export const getScriptCount = async (): Promise<number> => {
+  return await db.runs.count();
 };
 
-/**
- * Delete a specific transcript by its ID
- */
-export const deleteTranscriptById = async (id: string): Promise<boolean> => {
-  const db = await initDB();
-
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction([STORE_NAME], "readwrite");
-    const store = transaction.objectStore(STORE_NAME);
-
-    const getRequest = store.get(id);
-
-    getRequest.onerror = () => reject(getRequest.error);
-    getRequest.onsuccess = () => {
-      if (!getRequest.result) {
-        resolve(false);
-        return;
-      }
-
-      const deleteRequest = store.delete(id);
-
-      deleteRequest.onerror = () => reject(deleteRequest.error);
-      deleteRequest.onsuccess = () => resolve(true);
-    };
-  });
+export const deleteScriptById = async (id: string): Promise<boolean> => {
+  const deleted = await db.runs.delete(id);
+  return deleted !== undefined;
 };
 
-/**
- * Delete all transcripts for a specific session
- */
-export const deleteTranscriptsBySession = async (
-  session: string
+export const deleteScriptsBySession = async (
+  session: string,
 ): Promise<number> => {
-  const db = await initDB();
-
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction([STORE_NAME], "readwrite");
-    const store = transaction.objectStore(STORE_NAME);
-    const index = store.index("session");
-    const request = index.getAll(session);
-
-    request.onerror = () => reject(request.error);
-    request.onsuccess = () => {
-      const transcripts = request.result;
-      let deletedCount = 0;
-
-      transcripts.forEach((transcript) => {
-        const deleteRequest = store.delete(transcript.id);
-        deleteRequest.onsuccess = () => {
-          deletedCount++;
-          if (deletedCount === transcripts.length) {
-            resolve(deletedCount);
-          }
-        };
-        deleteRequest.onerror = () => reject(deleteRequest.error);
-      });
-
-      if (transcripts.length === 0) {
-        resolve(0);
-      }
-    };
-  });
+  return await db.runs.where("session").equals(session).delete();
 };
 
-/**
- * Delete multiple transcripts by their IDs
- */
-export const deleteMultipleTranscripts = async (
-  ids: string[]
+export const deleteMultipleScripts = async (
+  ids: string[],
 ): Promise<{ deleted: number; notFound: number }> => {
-  const db = await initDB();
+  if (ids.length === 0) {
+    return { deleted: 0, notFound: 0 };
+  }
 
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction([STORE_NAME], "readwrite");
-    const store = transaction.objectStore(STORE_NAME);
+  const existing = await db.runs.bulkGet(ids);
+  const deleted = existing.filter((item) => item !== undefined).length;
+  const notFound = ids.length - deleted;
 
-    let completed = 0;
-    let deleted = 0;
-    let notFound = 0;
+  await db.runs.bulkDelete(ids);
 
-    if (ids.length === 0) {
-      resolve({ deleted: 0, notFound: 0 });
-      return;
-    }
-
-    ids.forEach((id) => {
-      const getRequest = store.get(id);
-
-      getRequest.onerror = () => reject(getRequest.error);
-      getRequest.onsuccess = () => {
-        if (getRequest.result) {
-          const deleteRequest = store.delete(id);
-          deleteRequest.onerror = () => reject(deleteRequest.error);
-          deleteRequest.onsuccess = () => {
-            deleted++;
-            completed++;
-            if (completed === ids.length) {
-              resolve({ deleted, notFound });
-            }
-          };
-        } else {
-          notFound++;
-          completed++;
-          if (completed === ids.length) {
-            resolve({ deleted, notFound });
-          }
-        }
-      };
-    });
-  });
+  return { deleted, notFound };
 };
 
-/**
- * Delete ALL transcripts from the database (use with caution!)
- */
-export const deleteAllTranscripts = async (): Promise<number> => {
-  const db = await initDB();
-
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction([STORE_NAME], "readwrite");
-    const store = transaction.objectStore(STORE_NAME);
-
-    const getAllRequest = store.getAll();
-
-    getAllRequest.onerror = () => reject(getAllRequest.error);
-    getAllRequest.onsuccess = () => {
-      const transcripts = getAllRequest.result;
-      const totalCount = transcripts.length;
-
-      if (totalCount === 0) {
-        resolve(0);
-        return;
-      }
-
-      const clearRequest = store.clear();
-
-      clearRequest.onerror = () => reject(clearRequest.error);
-      clearRequest.onsuccess = () => resolve(totalCount);
-    };
-  });
+export const deleteAllScripts = async (): Promise<number> => {
+  const count = await db.runs.count();
+  await db.runs.clear();
+  return count;
 };
 
-// deleteAllTranscripts();
-
-// saveTranscript(
-//   "transaudio-5ba5d3b8-d10a-41c9-8d86-6f56e365f6c3",
-//   "43391386-c6c2-4083-9597-53dc231f8b90"
-// );
-
-// deleteTranscriptById(
-//   "5e13cdaa-1e80-4b12-be5f-05aa4f834ffb-p9az0x6e-1758532243657"
-// );
-
-// deleteMultipleTranscripts([
-//   "5e13cdaa-1e80-4b12-be5f-05aa4f834ffb-hou04o2o-1758532240167",
-//   "5e13cdaa-1e80-4b12-be5f-05aa4f834ffb-p1z9b20m-1758532186876",
-//   "5e13cdaa-1e80-4b12-be5f-05aa4f834ffb-ym5wrnkc-1758532184819",
-//   "5e13cdaa-1e80-4b12-be5f-05aa4f834ffb-2ets0gwz-1758532174038",
-//   "5e13cdaa-1e80-4b12-be5f-05aa4f834ffb-e5or0wa2-1758531855914",
-// ]);
+// deleteAllScripts();

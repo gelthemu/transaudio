@@ -1,7 +1,7 @@
 {
   "name": "TransAudio",
   "short_name": "TransAudio",
-  "description": "TransAudio is your go-to web app for seamless speech-to-text conversion.",
+  "description": "Transform your audio into accurate, searchable text with AI-powered transcription. Features speaker diarization, word-level timestamps, and privacy-first design.",
   "icons": [
     {
       "src": "./favicon.ico",
@@ -29,4 +29,3 @@
   "theme_color": "#0c161c",
   "background_color": "#0c161c"
 }
-

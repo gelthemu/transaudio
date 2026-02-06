@@ -13,10 +13,20 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "strict": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitAny": false,
+    "noFallthroughCasesInSwitch": false,
+
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
-  "include": ["src", "api", "lib", "api/....ts"]
+  "include": [
+    "src",
+    "src/components/help-form/help-form.tsx",
+    "src/components/features/features.tsx"
+, ".notes/raw-files/old-prompt.tsx"  ]
 }

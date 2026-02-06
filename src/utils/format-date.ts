@@ -1,3 +1,15 @@
+export const formatTimestamp = (ms: number): string => {
+  const hours = Math.floor(ms / 3600000);
+  const minutes = Math.floor((ms % 3600000) / 60000)
+    .toString()
+    .padStart(2, "0");
+  const seconds = Math.floor((ms % 60000) / 1000)
+    .toString()
+    .padStart(2, "0");
+
+  return hours > 0 ? `${hours}:${minutes}:${seconds}` : `${minutes}:${seconds}`;
+};
+
 export const formatDate = (input: number | string): string => {
   const timestamp = typeof input === "string" ? Number(input) : input;
   const date = new Date(timestamp);

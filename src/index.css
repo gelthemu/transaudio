@@ -3,7 +3,86 @@
 @tailwind utilities;
 
 @layer base {
-  ._img_ {
+  :root {
+    --color-dark: 26 28 30;
+    --color-light: 247 249 247;
+    --color-brand: 255 75 43;
+    --color-accent: 150 165 176;
+    --color-surface: 252 236 233;
+    --color-success: 36 143 80;
+    --color-error: 195 34 34;
+    --color-warning: 194 117 10;
+    --color-muted: 115 115 115;
+  }
+
+  /* :root {
+    --color-dark: #1a1c1e;
+    --color-light: #f7f9fa;
+    --color-brand: #ff4b2b;
+    --color-accent: #96a5b0;
+    --color-surface: #f6f8f9;
+    --color-success: #248f50;
+    --color-error: #c32222;
+    --color-warning: #c2750a;
+    --color-muted: #737373;
+  } */
+
+  *,
+  html {
+    @apply m-0 p-0 box-border;
+    scroll-behavior: smooth;
+    border-radius: 0 !important;
+    transition-duration: 0s;
+    font-size: 16px;
+    line-height: 1.5;
+    font-family: "Bricolage Grotesque", "system-ui", "sans-serif";
+    font-optical-sizing: auto;
+    font-style: normal;
+  }
+
+  body,
+  #root {
+    @apply relative w-full min-h-dvh antialiased bg-light text-dark;
+    line-height: 1.6;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+
+  h1,
+  h1 span {
+    @apply text-3xl md:text-4xl lg:text-5xl font-bold leading-[1.1] tracking-tight transaudio-none;
+  }
+
+  h2 {
+    @apply text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold leading-[1.1] tracking-tight;
+  }
+
+  h3 {
+    @apply text-lg font-semibold leading-[1.1] tracking-tight;
+  }
+
+  .transaudio-container {
+    @apply w-full max-w-5xl xl:max-w-6xl mx-auto px-4 2xl:px-10 border-x transaudio-dashed;
+  }
+
+  .transaudio-dashed {
+    @apply border-muted/30;
+    border-style: dashed;
+  }
+
+  .transaudio-btn {
+    @apply focus:outline-none focus:ring-0 focus:ring-offset-0 focus:ring-offset-transparent focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:ring-offset-transparent disabled:cursor-default disabled:pointer-events-none disabled:opacity-60 [&_svg]:pointer-events-none;
+  }
+
+  .transaudio-none {
     pointer-events: none;
     -webkit-user-drag: none;
     user-select: none;
@@ -11,71 +90,66 @@
     -webkit-user-select: none;
     -ms-user-select: none;
   }
+
+  .all-transcripts {
+    @apply w-full max-w-2xl p-px text-left border-collapse border-none border-transparent bg-transparent;
+  }
 }
 
-*,
-html {
-  box-sizing: border-box;
-  scroll-behavior: smooth;
-  transition-duration: 0s;
-}
-
-body {
-  background-color: #384b6f;
-  color: #ffffff;
-  font-size: 16px;
-  line-height: 1.5;
-  font-family: "Jura", sans-serif;
-  font-optical-sizing: auto;
+@font-face {
+  font-family: "Bricolage Grotesque";
+  src: url("/fonts/BricolageGrotesque-VariableFont.ttf") format("truetype");
+  font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
-:root {
-  --my-line-height: 16px;
+@font-face {
+  font-family: "Jura";
+  src: url("/fonts/Jura-VariableFont.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
 ::selection {
-  background: #ff4040;
-  color: #ffffff;
+  background-color: rgb(var(--color-accent) / 0.75);
+  color: rgb(var(--color-brand) / 1);
 }
 
 ::-moz-selection {
-  background: #ff4040;
-  color: #ffffff;
+  background-color: rgb(var(--color-surface) / 1);
+  color: rgb(var(--color-brand) / 1);
 }
 
 ::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
-}
-
-::-webkit-scrollbar-track {
-  background: #222e44;
+  width: 0.4rem;
+  height: 0.3rem;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #ffffff2f;
-  border-radius: 2px;
+  background-color: rgb(var(--color-accent) / 0.75);
+  border-radius: 1px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #ffffff6c;
+  background-color: rgb(var(--color-accent) / 1);
 }
 
-._img_ {
-  pointer-events: none;
-  -webkit-user-drag: none;
-  user-select: none;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
+::-webkit-scrollbar-track {
+  background-color: rgb(var(--color-surface) / 1);
 }
 
 button {
-  cursor: pointer;
+  cursor: pointer !important;
 }
 
 button:disabled {
+  opacity: 0.75 !important;
+  cursor: default !important;
+}
+
+.disabled {
   opacity: 0.5 !important;
   cursor: default !important;
 }
@@ -84,27 +158,6 @@ a {
   color: inherit;
 }
 
-table.transcripts {
-  @apply w-full max-w-xl p-px text-left border-collapse border-none border-transparent bg-dark/60;
-}
-
-table.transcripts th {
-  @apply border-none px-4 py-2;
-}
-
-table.transcripts td {
-  @apply border-none p-4;
-}
-
-table.transcripts thead {
-  @apply font-bold border-collapse border-b border-light/60 bg-red/60;
-}
-
-table.transcripts tbody tr {
-  @apply text-sm font-semibold border-collapse border-b border-light/20;
-}
-
-table.transcripts th:first-child,
-table.transcripts td:first-child {
-  @apply whitespace-nowrap pr-0 py-2;
+span {
+  color: inherit;
 }

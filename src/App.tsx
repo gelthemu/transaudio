@@ -1,49 +1,64 @@
+import { lazy, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Navigate,
   Routes,
   Route,
 } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HelmetProvider } from "react-helmet-async";
-import { ScrollToTop } from "./components/scroll-to-top";
-import { NavBar } from "./components/navbar";
-import { Footer } from "./components/footer";
-import { Progress } from "./components/progress";
-import { Separator } from "./components/separator";
-import { Home } from "./pages/home";
-import { Transcripts } from "./pages/transcripts";
-import { TranscriptContent } from "./pages/transcript-content";
-import { Statement } from "./components/statement";
-import { NotFound } from "./pages/404";
+import { Layout } from "@/components/layout/layout";
+import { getOrCreateSession } from "@/utils/session-manager";
+
+const Home = lazy(() => import("@/pages/home"));
+const Prompt = lazy(() => import("@/pages/i/prompt"));
+const Scripts = lazy(() => import("@/pages/scripts"));
+const Script = lazy(() => import("@/pages/i/script"));
+const About = lazy(() => import("@/pages/i/about"));
+const Docs = lazy(() => import("@/pages/resources/docs"));
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime:
+        import.meta.env.NODE_ENV !== "production" ? 0 : 2.5 * 60 * 1000,
+      retry: 1,
+    },
+  },
+});
+
+const SessionInitializer = ({ children }: { children: React.ReactNode }) => {
+  useEffect(() => {
+    getOrCreateSession();
+  }, []);
+
+  return <>{children}</>;
+};
 
 function App() {
   return (
-    <HelmetProvider>
-      <div className="p-4 space-y-6">
-        <NavBar />
-        <Separator />
-        <div className="w-full" style={{ minHeight: "calc(-500px + 100vh)" }}>
+    <QueryClientProvider client={queryClient}>
+      <HelmetProvider>
+        <div className="w-full h-full">
           <Router>
-            <ScrollToTop />
-            <Routes>
-              <Route path="/" element={<Navigate to="/home" replace />} />
-              <Route path="/home" element={<Home />} />
-              <Route path="/transcripts" element={<Transcripts />} />
-              <Route path="/transcript" element={<TranscriptContent />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <SessionInitializer>
+              <Layout>
+                <Routes>
+                  <Route path="/" element={<Navigate to="/home" replace />} />
+                  <Route path="/home" element={<Home />} />
+                  <Route path="/i/prompt" element={<Prompt />} />
+                  <Route path="/scripts" element={<Scripts />} />
+                  <Route path="/i/script" element={<Script />} />
+                  <Route path="/i/about" element={<About />} />
+                  <Route path="/resources/docs" element={<Docs />} />
+                  <Route path="*" element={<Navigate to="/home" replace />} />
+                </Routes>
+              </Layout>
+            </SessionInitializer>
           </Router>
         </div>
-        <div className="h-24 w-fit flex items-center justify-center opacity-40">
-          {"⋯"}
-        </div>
-        <Progress />
-        <Separator />
-        <Statement />
-        <Separator />
-        <Footer />
-      </div>
-    </HelmetProvider>
+      </HelmetProvider>
+    </QueryClientProvider>
   );
 }
 

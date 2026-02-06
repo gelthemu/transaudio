@@ -1,10 +1,10 @@
-import { formatDate } from "../utils/format-date";
-import { generateRandomId } from "../utils/random-id";
-import { Utterance, TranscriptResponse } from "../types";
+import { formatDate } from "@/utils/format-date";
+import { generateRandomId } from "@/utils/random-id";
+import { Utterance, ScriptInfo } from "@/types";
 import { Document, Packer, Paragraph, TextRun } from "docx";
 
 type DownloadParams = {
-  transcript: TranscriptResponse;
+  script: ScriptInfo;
   setError: (error: string) => void;
   format?: "txt" | "docx";
 };
@@ -19,8 +19,8 @@ const formatTimestamp = (ms: number): string => {
   return `${minutes}:${seconds}`;
 };
 
-const createWordDocument = async (transcriptText: string): Promise<Blob> => {
-  const lines = transcriptText.split("\n");
+const createWordDocument = async (scriptText: string): Promise<Blob> => {
+  const lines = scriptText.split("\n");
   const paragraphs: Paragraph[] = [];
   let i = 0;
 
@@ -70,7 +70,7 @@ const createWordDocument = async (transcriptText: string): Promise<Blob> => {
               size: 20,
             }),
           ],
-        })
+        }),
       );
 
       if (content) {
@@ -83,7 +83,7 @@ const createWordDocument = async (transcriptText: string): Promise<Blob> => {
                 size: 28,
               }),
             ],
-          })
+          }),
         );
       }
 
@@ -115,7 +115,7 @@ const createWordDocument = async (transcriptText: string): Promise<Blob> => {
               size: 20,
             }),
           ],
-        })
+        }),
       );
 
       if (content) {
@@ -128,7 +128,7 @@ const createWordDocument = async (transcriptText: string): Promise<Blob> => {
                 size: 28,
               }),
             ],
-          })
+          }),
         );
       }
 
@@ -147,7 +147,7 @@ const createWordDocument = async (transcriptText: string): Promise<Blob> => {
               size: 28,
             }),
           ],
-        })
+        }),
       );
       i++;
       continue;
@@ -162,12 +162,12 @@ const createWordDocument = async (transcriptText: string): Promise<Blob> => {
             size: 28,
           }),
         ],
-      })
+      }),
     );
     i++;
   }
 
-    const doc = new Document({
+  const doc = new Document({
     styles: {
       default: {
         document: {
@@ -204,7 +204,7 @@ const downloadAsText = (content: string, filename: string): void => {
 
 const downloadAsWord = async (
   content: string,
-  filename: string
+  filename: string,
 ): Promise<void> => {
   const blob = await createWordDocument(content);
   const url = URL.createObjectURL(blob);
@@ -218,38 +218,36 @@ const downloadAsWord = async (
 };
 
 export const iDownload = async ({
-  transcript,
+  script,
   setError,
   format = "docx",
 }: DownloadParams): Promise<void> => {
   try {
-    if (!transcript.id || !transcript) {
-      setError("zero transcripts ready for download...");
+    if (!script.id || !script) {
+      setError("zero scripts ready for download...");
       return;
     }
 
-    if (!transcript?.utterances || transcript.utterances.length === 0) {
-      setError("No transcript content available for download...");
+    if (!script?.utterances || script.utterances.length === 0) {
+      setError("No script content available for download...");
       return;
     }
 
-    let content = transcript.utterances
+    let content = script.utterances
       .map((utterance: Utterance) => {
         const timestamp = formatTimestamp(utterance.start);
         return `Speaker ${utterance.speaker}: [${timestamp}]\n${utterance.text}`;
       })
       .join("\n\n");
 
-    content = `Transcript for: ${transcript.id}\nCreated: ${formatDate(
-      transcript.created || ""
+    content = `Transcript for: ${script.id.slice(0, 8)}\nCreated: ${formatDate(
+      script.created || "",
     )}\nAccuracy: ${
-      transcript?.confidence
-        ? Math.round(transcript.confidence * 100).toFixed(2) + "%"
-        : "-"
+      script?.confidence ? (script.confidence * 100).toFixed(2) + "%" : "-"
     }\n\n${content}`;
 
     const randomId = generateRandomId();
-    const baseFilename = `transaudio-${randomId}-${transcript.id}`;
+    const baseFilename = `transaudio-${randomId}-${script.id.slice(0, 8)}`;
 
     if (format === "docx") {
       await downloadAsWord(content, `${baseFilename}.docx`);
@@ -259,14 +257,14 @@ export const iDownload = async ({
   } catch (err) {
     const errorMessage =
       err instanceof Error ? err.message : "Unknown error occurred";
-    setError(`Failed to download transcript: ${errorMessage}...`);
+    setError(`Failed to download script: ${errorMessage}...`);
     console.error("Download error:", err);
   }
 };
 
 export const downloadAsWordDocument = async ({
-  transcript,
+  script,
   setError,
 }: Omit<DownloadParams, "format">): Promise<void> => {
-  return iDownload({ transcript, setError, format: "docx" });
+  return iDownload({ script, setError, format: "docx" });
 };

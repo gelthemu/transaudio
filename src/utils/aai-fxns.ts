@@ -1,6 +1,6 @@
-import { UploadProgress, TranscriptResponse } from "../types";
+import { UploadProgress, ScriptInfo } from "@/types";
 
-type TranscriptionStartResult = {
+type Result = {
   status: "success" | "failed";
   id?: string;
 };
@@ -13,7 +13,7 @@ export async function ab3d2d3c1f7417(
 ): Promise<UrlResult> {
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/api/transaudio/adfbd7d/ab3d2d3`,
+      `${import.meta.env.VITE_API_URL}/v1/transaudio/adfbd7d/ab3d2d3`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -71,7 +71,7 @@ export async function ab3d2d3c1f7417(
 export const ab685aebf914a0 = async (key: string): Promise<UrlResult> => {
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/api/transaudio/adfbd7d/ab685ae`,
+      `${import.meta.env.VITE_API_URL}/v1/transaudio/adfbd7d/ab685ae`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -92,12 +92,10 @@ export const ab685aebf914a0 = async (key: string): Promise<UrlResult> => {
   }
 };
 
-export const ac41bedb6ec4a9 = async (
-  audioUrl: string,
-): Promise<TranscriptionStartResult> => {
+export const ac41bedb6ec4a9 = async (audioUrl: string): Promise<Result> => {
   try {
     const start = await fetch(
-      `${import.meta.env.VITE_API_URL}/api/transaudio/adfbd7d/ac41bed`,
+      `${import.meta.env.VITE_API_URL}/v1/transaudio/adfbd7d/ac41bed`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -120,10 +118,10 @@ export const ac41bedb6ec4a9 = async (
 
 export const ad58ad087edb98 = async (
   id: string,
-): Promise<TranscriptResponse | null> => {
+): Promise<ScriptInfo | null> => {
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/api/transaudio/adfbd7d/ad58ad0`,
+      `${import.meta.env.VITE_API_URL}/v1/transaudio/adfbd7d/ad58ad0`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

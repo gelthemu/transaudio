@@ -1,20 +1,23 @@
-import React from "react";
+import { cn } from "@/lib/utils";
 
 interface SeparatorProps {
-  limit?: number;
-  margin?: string;
+  orientation?: "horizontal" | "vertical";
+  className?: string;
 }
 
-export const Separator: React.FC<SeparatorProps> = ({ limit = 12, margin }) => {
-  const separator = "—·".repeat(limit);
-
+export const Separator = ({
+  orientation = "horizontal",
+  className,
+}: SeparatorProps) => {
   return (
     <div
-      className={`${
-        margin ? margin : "my-6 md:my-8"
-      } opacity-20 overflow-hidden whitespace-nowrap`}
-    >
-      {separator}
-    </div>
+      className={cn(
+        orientation === "horizontal"
+          ? "w-full h-px border-t"
+          : "w-px h-full border-r",
+        "border-muted/40 bg-transparent",
+        className,
+      )}
+    />
   );
 };
