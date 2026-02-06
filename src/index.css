@@ -6,7 +6,7 @@
   :root {
     --color-dark: 26 28 30;
     --color-light: 247 249 247;
-    --color-brand: 255 75 43;
+    --color-brand: 58 77 112;
     --color-accent: 150 165 176;
     --color-surface: 252 236 233;
     --color-success: 36 143 80;
@@ -18,7 +18,7 @@
   /* :root {
     --color-dark: #1a1c1e;
     --color-light: #f7f9fa;
-    --color-brand: #ff4b2b;
+    --color-brand: #3a4d70;
     --color-accent: #96a5b0;
     --color-surface: #f6f8f9;
     --color-success: #248f50;
