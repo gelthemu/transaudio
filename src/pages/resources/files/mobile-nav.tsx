@@ -41,7 +41,7 @@ export const MobileNav = ({
             <Button
               variant="outline"
               onClick={() => setShowSortDropdown(!showSortDropdown)}
-              className="w-full !justify-between !border-none"
+              className="w-full !justify-between !border-none !bg-transparent"
             >
               <span className="flex flex-row items-center space-x-2">
                 {activeSection && <MenuSquare className="h-4 w-4 text-muted" />}
