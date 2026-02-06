@@ -40,7 +40,7 @@ export const MobileNav = ({
       ([entry]) => {
         setIsStuck(entry.intersectionRatio < 1);
       },
-      { threshold: [1], rootMargin: "0px 0px 0px 0px" },
+      { threshold: [1], rootMargin: "-1px 0px 0px 0px" },
     );
 
     observer.observe(sectionRef.current);
@@ -51,13 +51,17 @@ export const MobileNav = ({
   return (
     <section
       ref={sectionRef}
-      className="w-full sticky min-[820px]:hidden top-16 z-[30] bg-light/60 bg-blend-multiply backdrop-blur-md transaudio-dashed"
+      className={cn(
+        "w-full sticky min-[820px]:hidden top-16 z-[30] transition-all duration-300",
+        "bg-light/60 bg-blend-multiply backdrop-blur-md transaudio-dashed",
+        isStuck ? "data-[stuck=true]" : "",
+      )}
     >
       <div
         className={cn(
           "relative transaudio-container",
           isStuck ? "pt-8" : "pb-0",
-          "pb-8 transition-all duration-200",
+          "pb-8 transition-all duration-300",
         )}
       >
         <div className="relative flex flex-col sm:px-8 md:px-12">
