@@ -20,7 +20,7 @@ export const Layout = forwardRef<HTMLDivElement, LayoutProps>(
     useEffect(() => {
       const timer = setTimeout(() => {
         setLoading(false);
-      }, 0); // 2500
+      }, 2500); // 2500
 
       return () => clearTimeout(timer);
     }, [location.pathname]);

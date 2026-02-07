@@ -1,4 +1,4 @@
-import { RefObject } from "react";
+import { useEffect, useState, useRef, RefObject } from "react";
 import { ChevronDown, MenuSquare, LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -30,9 +30,41 @@ export const MobileNav = ({
   scrollToSection,
   sortDropdownRef,
 }: MobileNavProps) => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [isStuck, setIsStuck] = useState(false);
+
+  useEffect(() => {
+    if (!sectionRef.current) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsStuck(entry.intersectionRatio < 1);
+
+        console.log("Stuck?", entry.intersectionRatio, entry.isIntersecting);
+      },
+      { threshold: [1], rootMargin: `-65px 0px 0px 0px` },
+    );
+
+    observer.observe(sectionRef.current);
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section className="w-full sticky min-[820px]:hidden top-16 z-50 bg-light/60 bg-blend-multiply backdrop-blur-md transaudio-dashed">
-      <div className="relative transaudio-container pb-8">
+    <section
+      ref={sectionRef}
+      data-stuck={isStuck ? "" : undefined}
+      className={cn(
+        "w-full sticky min-[820px]:hidden top-16 z-[30] transition-all duration-300",
+        "bg-light/60 bg-blend-multiply backdrop-blur-md transaudio-dashed",
+      )}
+    >
+      <div
+        className={cn(
+          "relative transaudio-container",
+          "data-[stuck]:pt-8 pb-8 transition-all duration-300",
+        )}
+      >
         <div className="relative flex flex-col sm:px-8 md:px-12">
           <div
             ref={sortDropdownRef}
@@ -41,7 +73,7 @@ export const MobileNav = ({
             <Button
               variant="outline"
               onClick={() => setShowSortDropdown(!showSortDropdown)}
-              className="w-full !justify-between !border-none"
+              className="w-full !justify-between !border-none !bg-transparent"
             >
               <span className="flex flex-row items-center space-x-2">
                 {activeSection && <MenuSquare className="h-4 w-4 text-muted" />}
@@ -58,7 +90,7 @@ export const MobileNav = ({
               </span>
             </Button>
             {showSortDropdown && (
-              <div className="absolute right-0 left-0 top-full mt-1 bg-light border border-brand/50 shadow-xl z-[60]">
+              <div className="absolute right-0 left-0 top-full mt-1 bg-light border border-brand/50 shadow-xl z-[40]">
                 {sections.map((section) => (
                   <Button
                     key={section.id}
