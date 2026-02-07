@@ -2,7 +2,7 @@
   "name": "transaudio",
   "private": true,
   "version": "0.1.02",
-  "packageManager": "pnpm@10.28.2",
+  "packageManager": "pnpm@9.x",
   "type": "module",
   "scripts": {
     "dev": "vite | node src/scripts/show-network-url.mjs",
