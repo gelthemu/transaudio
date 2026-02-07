@@ -1,11 +1,13 @@
 import React, { RefObject } from "react";
 import { Upload, FileAudio } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { formatFileSize } from "@/lib/validation";
 import { cleanFileName } from "@/utils/random-id";
+import { TransAudioState } from "@/types";
+import { cn } from "@/lib/utils";
 
 interface FileUploadProps {
   file: File | null;
+  value: number;
   isError: boolean;
   dragActive: boolean;
   inputRef: RefObject<HTMLInputElement>;
@@ -14,6 +16,7 @@ interface FileUploadProps {
   onDragLeave: (e: React.DragEvent<Element>) => void;
   onDragOver: (e: React.DragEvent<Element>) => void;
   onDrop: (e: React.DragEvent<Element>) => void;
+  state: TransAudioState;
   disabled?: boolean;
 }
 
@@ -21,6 +24,7 @@ const ACCEPTED_EXTENSIONS = [".mp3", ".m4a"];
 
 export const FileUpload: React.FC<FileUploadProps> = ({
   file,
+  value,
   isError,
   dragActive,
   inputRef,
@@ -29,16 +33,17 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   onDragLeave,
   onDragOver,
   onDrop,
+  state = "idle",
   disabled = false,
 }) => {
   return (
     <div
       key="dropzone"
       className={cn(
-        "relative p-8 flex flex-col items-center justify-center gap-3",
+        "relative w-full p-8 flex flex-col items-center justify-center gap-3",
         "border-2 border-dashed cursor-pointer",
         dragActive
-          ? "border-brand bg-brand/5"
+          ? "border-brand bg-brand/10"
           : file && !isError
             ? "border-success bg-success/10"
             : file && isError
@@ -60,14 +65,22 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         className="hidden"
         disabled={disabled}
       />
-      <div className="flex flex-col items-center text-center">
-        <div className={cn("p-3 mb-2 transition-all duration-200")}>
+      {state !== "idle" && state !== "error" && value > 0 && (
+        <div className="absolute inset-0 z-0 h-full bg-transparent overflow-hidden">
+          <div
+            className="h-full bg-success/50 transition-all duration-300 ease-out"
+            style={{ width: `${value}%` }}
+          />
+        </div>
+      )}
+      <div className="flex flex-col items-center text-center z-10">
+        <div className={cn("p-2 transition-all duration-200")}>
           {file ? (
             <FileAudio
-              className={cn("h-8 w-8", isError ? "text-error" : "text-success")}
+              className={cn("h-6 w-6", isError ? "text-error" : "text-success")}
             />
           ) : (
-            <Upload className="h-8 w-8 text-accent" />
+            <Upload className="h-6 w-6 text-accent" />
           )}
         </div>
         {file ? (

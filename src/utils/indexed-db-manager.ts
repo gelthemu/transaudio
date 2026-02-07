@@ -5,7 +5,7 @@ class TransAudioDatabase extends Dexie {
   runs!: EntityTable<StoredScript, "task">;
 
   constructor() {
-    super("transaudio");
+    super("__transaudio");
     this.version(1).stores({
       runs: "task, session, timestamp",
     });

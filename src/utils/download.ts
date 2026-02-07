@@ -1,7 +1,15 @@
 import { formatDate } from "@/utils/format-date";
 import { generateRandomId } from "@/utils/random-id";
-import { Utterance, ScriptInfo } from "@/types";
-import { Document, Packer, Paragraph, TextRun } from "docx";
+import { Segment, ScriptInfo } from "@/types";
+import {
+  Document,
+  Packer,
+  Paragraph,
+  TextRun,
+  AlignmentType,
+  Footer,
+  Header,
+} from "docx";
 
 type DownloadParams = {
   script: ScriptInfo;
@@ -22,8 +30,8 @@ const formatTimestamp = (ms: number): string => {
 const createWordDocument = async (scriptText: string): Promise<Blob> => {
   const lines = scriptText.split("\n");
   const paragraphs: Paragraph[] = [];
-  let i = 0;
 
+  let i = 0;
   while (i < lines.length) {
     const line = lines[i];
 
@@ -137,7 +145,7 @@ const createWordDocument = async (scriptText: string): Promise<Blob> => {
       continue;
     }
 
-    if (line.match(/^(Transcript for|Created|Accuracy):/i)) {
+    if (line.match(/^(Script for|Accuracy):/i)) {
       paragraphs.push(
         new Paragraph({
           children: [
@@ -181,6 +189,57 @@ const createWordDocument = async (scriptText: string): Promise<Blob> => {
     sections: [
       {
         properties: {},
+        headers: {
+          default: new Header({
+            children: [
+              new Paragraph({
+                children: [
+                  new TextRun({
+                    text: "Trans",
+                    font: "Calibri",
+                    size: 16,
+                    color: "A9A9A9",
+                  }),
+                  new TextRun({
+                    text: "AUDIO",
+                    font: "Calibri",
+                    size: 16,
+                    color: "A9A9A9",
+                  }),
+                ],
+                alignment: AlignmentType.RIGHT,
+              }),
+            ],
+          }),
+        },
+        footers: {
+          default: new Footer({
+            children: [
+              new Paragraph({
+                children: [
+                  new TextRun({
+                    text: "Try it Out, for Free at",
+                    font: "Calibri",
+                    size: 16,
+                    color: "A9A9A9",
+                  }),
+                  new TextRun({
+                    text: " ",
+                    size: 16,
+                  }),
+                  new TextRun({
+                    text: `${import.meta.env.VITE_BASE_URL}`,
+                    font: "Calibri",
+                    size: 16,
+                    bold: true,
+                    color: "A9A9A9",
+                  }),
+                ],
+                alignment: AlignmentType.LEFT,
+              }),
+            ],
+          }),
+        },
         children: paragraphs,
       },
     ],
@@ -223,31 +282,31 @@ export const iDownload = async ({
   format = "docx",
 }: DownloadParams): Promise<void> => {
   try {
-    if (!script.id || !script) {
+    if (!script.task || !script) {
       setError("zero scripts ready for download...");
       return;
     }
 
-    if (!script?.utterances || script.utterances.length === 0) {
+    if (!script?.segments || script.segments.length === 0) {
       setError("No script content available for download...");
       return;
     }
 
-    let content = script.utterances
-      .map((utterance: Utterance) => {
-        const timestamp = formatTimestamp(utterance.start);
-        return `Speaker ${utterance.speaker}: [${timestamp}]\n${utterance.text}`;
+    let content = script.segments
+      .map((segment: Segment) => {
+        const timestamp = formatTimestamp(segment.timestamp);
+        return `Speaker ${segment.id}: [${timestamp}]\n${segment.text}`;
       })
       .join("\n\n");
 
-    content = `Transcript for: ${script.id.slice(0, 8)}\nCreated: ${formatDate(
-      script.created || "",
+    content = `Script for: ${script.task.slice(0, 8)}, Created: ${formatDate(
+      script.timestamp || "-",
     )}\nAccuracy: ${
-      script?.confidence ? (script.confidence * 100).toFixed(2) + "%" : "-"
+      script?.accuracy ? (script.accuracy * 100).toFixed(2) + "%" : "-"
     }\n\n${content}`;
 
     const randomId = generateRandomId();
-    const baseFilename = `transaudio-${randomId}-${script.id.slice(0, 8)}`;
+    const baseFilename = `transaudio-${randomId}-${script.task.slice(0, 8)}`;
 
     if (format === "docx") {
       await downloadAsWord(content, `${baseFilename}.docx`);

@@ -29,7 +29,7 @@ export const Footer = () => {
                 <Logo disabled={true} />
                 <div>
                   <span className="text-sm text-accent transaudio-none">
-                    v{import.meta.env.VITE_SITE_VERSION} (ii)
+                    v{import.meta.env.VITE_SITE_VERSION} (i)
                   </span>
                 </div>
               </div>
@@ -79,11 +79,18 @@ export const Footer = () => {
           </div>
           <Separator className="my-8" />
           <div className="flex flex-col md:flex-row md:items-center md:justify-between md:space-x-2">
-            <small className="text-muted/80">Session: {session}</small>
-            <small className="text-muted/90">
-              © 2023 - {new Date().getFullYear()} TransAUDIO. All rights
-              reserved
-            </small>
+            <div className="flex flex-row items-center space-x-0 text-muted/80">
+              <small className="">Session: {session?.slice(0, 8)}</small>
+              <small className="blur-[2px] transaudio-none">
+                {session?.slice(8)}
+              </small>
+            </div>
+            <div>
+              <small className="text-muted/90">
+                © 2023 - {new Date().getFullYear()} TransAUDIO. All rights
+                reserved
+              </small>
+            </div>
           </div>
         </div>
       </footer>

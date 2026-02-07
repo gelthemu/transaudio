@@ -145,12 +145,12 @@ button {
 }
 
 button:disabled {
-  opacity: 0.75 !important;
+  opacity: 0.8 !important;
   cursor: default !important;
 }
 
 .disabled {
-  opacity: 0.5 !important;
+  opacity: 0.75 !important;
   cursor: default !important;
 }
 

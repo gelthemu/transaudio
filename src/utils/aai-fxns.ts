@@ -30,7 +30,8 @@ export async function ab3d2d3c1f7417(
 
       xhr.upload.addEventListener("progress", (event) => {
         if (event.lengthComputable && onProgress) {
-          const percentage = Math.round((event.loaded / event.total) * 100);
+          const percentage =
+            Math.round((event.loaded / event.total) * 100 * 100) / 100;
           onProgress({
             loaded: event.loaded,
             total: event.total,

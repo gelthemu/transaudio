@@ -252,6 +252,7 @@ const Prompt: React.FC = () => {
                 {inputMethod === "file" ? (
                   <FileUpload
                     file={file}
+                    value={uploadProgress}
                     isError={!!currentError || !!error}
                     dragActive={dragActive}
                     inputRef={inputRef}
@@ -260,6 +261,7 @@ const Prompt: React.FC = () => {
                     onDragLeave={handleDrag}
                     onDragOver={handleDrag}
                     onDrop={handleDrop}
+                    state={uploadState}
                     disabled={uploadState !== "idle"}
                   />
                 ) : (

@@ -30,7 +30,7 @@ export const Progress = ({
       )}
       <small className="text-muted">
         {state === "uploading"
-          ? `Uploading... ${Math.round(percentage).toFixed(1)}%`
+          ? `Uploading... ${percentage.toFixed(2)}%`
           : state === "processing"
             ? "Processing..."
             : state === "complete"
