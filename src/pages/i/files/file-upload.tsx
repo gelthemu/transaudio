@@ -1,14 +1,14 @@
-import React from "react";
+import React, { RefObject } from "react";
 import { Upload, FileAudio } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatFileSize } from "@/lib/validation";
 import { cleanFileName } from "@/utils/random-id";
 
-interface FileUploadSectionProps {
+interface FileUploadProps {
   file: File | null;
   isError: boolean;
   dragActive: boolean;
-  inputRef: React.RefObject<HTMLInputElement>;
+  inputRef: RefObject<HTMLInputElement>;
   onFileSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onDragEnter: (e: React.DragEvent<Element>) => void;
   onDragLeave: (e: React.DragEvent<Element>) => void;
@@ -19,7 +19,7 @@ interface FileUploadSectionProps {
 
 const ACCEPTED_EXTENSIONS = [".mp3", ".m4a"];
 
-export const FileUploadSection: React.FC<FileUploadSectionProps> = ({
+export const FileUpload: React.FC<FileUploadProps> = ({
   file,
   isError,
   dragActive,

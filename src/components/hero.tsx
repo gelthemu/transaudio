@@ -153,4 +153,5 @@ export const PromptHero = forwardRef<HTMLDivElement, PromptHeroProps>(
   },
 );
 
-PromptHero.displayName = "PHero";
+HeroSection.displayName = "HeroSection";
+PromptHero.displayName = "PromptHero";

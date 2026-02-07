@@ -20,7 +20,7 @@ import {
   processTranscription,
   uploadFileToStorage,
 } from "./files/script-service";
-import { FileUploadSection } from "./files/file-upload";
+import { FileUpload } from "./files/file-upload";
 import { generateRandomId } from "@/utils/random-id";
 import { InputMethod, TransAudioState } from "@/types";
 import { cn } from "@/lib/utils";
@@ -229,9 +229,10 @@ const Prompt: React.FC = () => {
           isValidUrl(audioUrl) || isValidFile(file) || uploadState !== "idle"
         }
       />
+      <div ref={getStartedRef} />
       {showView && (
         <AnimatePresence>
-          <Section ref={getStartedRef}>
+          <Section>
             <div className="w-full flex flex-col max-w-2xl mx-auto">
               <div className="flex flex-col items-center justify-center mb-6">
                 <h3>
@@ -249,7 +250,7 @@ const Prompt: React.FC = () => {
                 className="space-y-5"
               >
                 {inputMethod === "file" ? (
-                  <FileUploadSection
+                  <FileUpload
                     file={file}
                     isError={!!currentError || !!error}
                     dragActive={dragActive}

@@ -56,7 +56,7 @@ export async function ab3d2d3c1f7417(
       xhr.send(file);
     });
 
-    return "";
+    return "...";
   } catch {
     return "";
   }

@@ -40,7 +40,9 @@ export const uploadFileToStorage = async (
 
   await new Promise((resolve) => setTimeout(resolve, 2000));
 
-  return url;
+  const finalUrl = url.split("?")[0];
+
+  return finalUrl;
 };
 
 export const processTranscription = async (url: string) => {
