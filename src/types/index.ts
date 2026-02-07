@@ -12,25 +12,18 @@ export interface ProcessingStep {
   status: "pending" | "active" | "complete";
 }
 
-export interface Word {
+export interface Segment {
+  id: string;
   text: string;
-  start: number;
-  end: number;
-}
-
-export interface Utterance {
-  speaker: string;
-  text: string;
-  start: number;
-  words: Word[];
+  timestamp: number;
 }
 
 export interface ScriptInfo {
-  id: string;
-  created: number;
-  confidence?: number;
-  words?: Word[];
-  utterances?: Utterance[];
+  task: string;
+  timestamp: number;
+  accuracy?: number;
+  words?: number;
+  segments?: Segment[];
 }
 
 export interface UploadProgress {
@@ -41,6 +34,6 @@ export interface UploadProgress {
 
 export interface StoredScript {
   session: string;
-  id: string;
-  created: number;
+  task: string;
+  timestamp: number;
 }

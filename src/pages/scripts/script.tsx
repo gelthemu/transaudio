@@ -7,6 +7,7 @@ import { ScriptViewer } from "@/components/script-viewer";
 import { ad58ad087edb98 } from "@/utils/aai-fxns";
 import { formatDate } from "@/utils/format-date";
 import { iDownload } from "@/utils/download";
+import { PageLoader } from "@/components/layout/page-transition";
 import { ScriptInfo } from "@/types";
 
 // import data from "@/data/test-example.json";
@@ -18,28 +19,32 @@ const Script: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
   const [script, setScript] = useState<ScriptInfo>({
-    id: "trans-audio",
-    created: 1680848161234,
-    confidence: null,
-    words: [],
-    utterances: [],
+    task: "trans-audio",
+    timestamp: 1680848161234,
+    accuracy: null,
+    words: 0,
+    segments: [],
   });
 
-  const id = searchParams.get("id");
+  const task = searchParams.get("task");
   const session = searchParams.get("ss");
-  const created = searchParams.get("dd");
+  const timestamp = searchParams.get("dd");
 
   useEffect(() => {
     const loadScript = async () => {
-      if (!id) {
-        setError("Invalid script ID.");
-        setLoading(false);
-        return;
+      if (!task) {
+        setError("Invalid script task.");
+
+        const timer = setTimeout(() => {
+          setLoading(false);
+        }, 3000); // 3000
+
+        return () => clearTimeout(timer);
       }
 
       try {
         // setScript(t);
-        const data = await ad58ad087edb98(id);
+        const data = await ad58ad087edb98(task);
         if (!data) {
           setError("Script not found or expired.");
         } else {
@@ -49,11 +54,15 @@ const Script: React.FC = () => {
         setError("Failed to load script.");
       }
 
-      setLoading(false);
+      const timer = setTimeout(() => {
+        setLoading(false);
+      }, 3000); // 3000
+
+      return () => clearTimeout(timer);
     };
 
     loadScript();
-  }, [id]);
+  }, [task]);
 
   const handleDownload = async () => {
     if (!script) {
@@ -69,11 +78,11 @@ const Script: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Script | {script.id} - TransAUDIO</title>
+        <title>Script | {script.task} - TransAUDIO</title>
         <meta name="robots" content="noindex, nofollow" />
         <link
           rel="canonical"
-          href={`https://transaudio.vercel.app/scripts/script?id=${id}&ss=${session}&dd=${created}`}
+          href={`https://transaudio.vercel.app/scripts/script?task=${task}&ss=${session}&dd=${timestamp}`}
         />
       </Helmet>
       <HeroSection sr={false}>
@@ -83,17 +92,17 @@ const Script: React.FC = () => {
               <span className="text-sm">Scripts</span>
             </Link>
             <span className="mx-2 text-sm">{">"}</span>
-            <span className="text-brand/80 text-sm font-semibold">
-              ID: {id.slice(0, 8)} . . .
+            <span className="text-brand text-sm font-semibold">
+              ID: {task.slice(0, 8)} . . .
             </span>
           </nav>
-          <h1 className="mb-4 text-brand">{id}</h1>
+          <h1 className="mb-4 text-brand">{task}</h1>
           <div className="text-sm text-muted">
-            <p>Created: {created ? formatDate(created) : "-"}</p>
+            <p>Created: {timestamp ? formatDate(timestamp) : "-"}</p>
             <p>
               Accuracy:{" "}
-              {script?.confidence
-                ? (script?.confidence * 100).toFixed(2) + "%"
+              {script?.accuracy
+                ? (script?.accuracy * 100).toFixed(2) + "%"
                 : "-"}
             </p>
           </div>
@@ -101,7 +110,9 @@ const Script: React.FC = () => {
         <div className="w-full h-px my-12 border-y transaudio-dashed opacity-90" />
         <div className="w-full flex flex-col text-left">
           {loading ? (
-            <div />
+            <div className="relative w-full min-h-10">
+              <PageLoader />
+            </div>
           ) : error || !script ? (
             <div className="w-full flex flex-col space-y-4">
               <div>
@@ -122,7 +133,10 @@ const Script: React.FC = () => {
               <div>
                 <Button size={"sm"} onClick={handleDownload} className="w-fit">
                   <span className="text-base !font-semibold">
-                    Download Script
+                    Download Script{" "}
+                    <small className="text-surface">
+                      ({script?.words || 0} words)
+                    </small>
                   </span>
                 </Button>
               </div>

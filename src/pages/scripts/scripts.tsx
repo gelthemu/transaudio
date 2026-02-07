@@ -20,7 +20,7 @@ const Scripts: React.FC = () => {
   const navigate = useNavigate();
   const [scripts, setScripts] = useState<StoredScript[]>([]);
   const [loading, setLoading] = useState(true);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deletinTask, setDeletinTask] = useState<string | null>(null);
   const [confirmId, setConfirmId] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<SortOption>("newest");
   const [showSortDropdown, setShowSortDropdown] = useState(false);
@@ -37,26 +37,26 @@ const Scripts: React.FC = () => {
     loadScripts();
   }, []);
 
-  const handleView = (id: string, ss: string, dd: number) => {
-    navigate(`/scripts/script?id=${id}&ss=${ss}&dd=${dd}`);
+  const handleView = (task: string, ss: string, timestamp: number) => {
+    navigate(`/scripts/script?task=${task}&ss=${ss}&dd=${timestamp}`);
   };
 
-  const handleDelete = async (id: string) => {
-    setDeletingId(id);
+  const handleDelete = async (task: string) => {
+    setDeletinTask(task);
     try {
-      await deleteScriptById(id);
+      await deleteScriptById(task);
       await cleanExpiredScripts();
       const freshScripts = await getAllScripts();
       setScripts(freshScripts);
     } catch {
       alert("Failed to delete script.");
     } finally {
-      setDeletingId(null);
+      setDeletinTask(null);
     }
   };
 
-  const openConfirm = (id: string) => {
-    setConfirmId(id);
+  const openConfirm = (task: string) => {
+    setConfirmId(task);
   };
 
   const closeConfirm = () => {
@@ -75,9 +75,9 @@ const Scripts: React.FC = () => {
     result.sort((a, b) => {
       switch (sortBy) {
         case "newest":
-          return b.created - a.created;
+          return b.timestamp - a.timestamp;
         case "oldest":
-          return a.created - b.created;
+          return a.timestamp - b.timestamp;
         default:
           return 0;
       }
@@ -195,7 +195,7 @@ const Scripts: React.FC = () => {
                     {visibleScripts.map((script, index) => (
                       <div
                         className="border-collapse flex flex-row"
-                        key={script.id}
+                        key={script.task}
                       >
                         <div className="shrink-0 w-12 h-auto whitespace-nowrap text-sm text-light/80 bg-brand border-none p-4 pt-5">
                           #{index + 1}
@@ -203,14 +203,14 @@ const Scripts: React.FC = () => {
                         <div className="flex-1 flex flex-col space-y-2 border-none p-4 bg-accent/30">
                           <div className="details_main">
                             <span className="text-brand text-base font-semibold">
-                              {script.id}
+                              {script.task}
                             </span>
                             <br />
                             <span className="text-sm text-muted">
-                              {formatDate(script.created)}
+                              {formatDate(script.timestamp)}
                             </span>
                           </div>
-                          {confirmId === script.id ? (
+                          {confirmId === script.task ? (
                             <div>
                               <div className="flex flex-col space-y-[2px] md:space-y-0 md:flex-row md:items-center md:space-x-3">
                                 <div>
@@ -228,7 +228,7 @@ const Scripts: React.FC = () => {
                                       size="xs"
                                       variant="outline"
                                       onClick={closeConfirm}
-                                      disabled={deletingId !== null}
+                                      disabled={deletinTask !== null}
                                     >
                                       <span className="!font-medium">
                                         Cancel
@@ -238,7 +238,7 @@ const Scripts: React.FC = () => {
                                       asChild
                                       size="xs"
                                       onClick={confirmDelete}
-                                      disabled={deletingId !== null}
+                                      disabled={deletinTask !== null}
                                     >
                                       <span className="!font-semibold">
                                         YES, Delete
@@ -255,9 +255,9 @@ const Scripts: React.FC = () => {
                                 size="xs"
                                 onClick={() =>
                                   handleView(
-                                    script.id,
+                                    script.task,
                                     script.session,
-                                    script.created,
+                                    script.timestamp,
                                   )
                                 }
                               >
@@ -267,11 +267,11 @@ const Scripts: React.FC = () => {
                                 asChild
                                 size="xs"
                                 variant="outline"
-                                onClick={() => openConfirm(script.id)}
-                                disabled={deletingId === script.id}
+                                onClick={() => openConfirm(script.task)}
+                                disabled={deletinTask === script.task}
                               >
                                 <span className="!font-medium">
-                                  {deletingId === script.id
+                                  {deletinTask === script.task
                                     ? "Deleting..."
                                     : "Delete"}
                                 </span>

@@ -1,11 +1,11 @@
 import { saveScript } from "./indexed-db-manager";
 import { getSession } from "./session-manager";
 
-export const save = async (id: string): Promise<void> => {
+export const save = async (task: string): Promise<void> => {
   const session = getSession();
 
   try {
-    await saveScript(session, id);
+    await saveScript(session, task);
     console.log(`✅ SUCCESSS!!!`);
     return;
   } catch (error) {

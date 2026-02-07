@@ -18,8 +18,8 @@ const SPEAKER_COLORS = [
 
 export const ScriptViewer: React.FC<ScriptViewerProps> = ({ t }) => {
   const speakerColorMap = useMemo(() => {
-    if (!t?.utterances) return {};
-    const speakers = [...new Set(t.utterances.map((u) => u.speaker))];
+    if (!t?.segments) return {};
+    const speakers = [...new Set(t.segments.map((s) => s.id))];
 
     const shuffledColors = [...SPEAKER_COLORS].sort(() => Math.random() - 0.5);
 
@@ -34,34 +34,34 @@ export const ScriptViewer: React.FC<ScriptViewerProps> = ({ t }) => {
 
   return (
     <div className="flex flex-col space-y-12">
-      {t.utterances.length !== 0 ? (
+      {t.segments.length !== 0 ? (
         <div className="flex flex-col space-y-5">
-          {t.utterances.map((utterance, uttIndex) => (
+          {t.segments.map((segment, segIndex) => (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: uttIndex * 0.01 }}
-              key={uttIndex}
+              transition={{ duration: 0.3, delay: segIndex * 0.01 }}
+              key={segIndex}
             >
               <div className="flex flex-row items-end space-x-2 transaudio-none">
                 <div
                   className={cn(
                     "inline-flex border border-accent/80",
-                    speakerColorMap[utterance.speaker] || "bg-accent/80",
+                    speakerColorMap[segment.id] || "bg-accent/80",
                   )}
                 >
                   <span className="text-base font-semibold bg-light/60 px-1.5">
-                    Speaker {utterance.speaker}:
+                    Speaker {segment.id}:
                   </span>
                 </div>
                 <div>
                   <span className="text-sm text-muted">
-                    [{formatTimestamp(utterance.start)}]
+                    [{formatTimestamp(segment.timestamp)}]
                   </span>
                 </div>
               </div>
               <div className="ml-2.5 md:ml-4 mt-1 text-base leading-relaxed select-text border-none opacity-95">
-                {utterance.text}
+                {segment.text}
               </div>
             </motion.div>
           ))}

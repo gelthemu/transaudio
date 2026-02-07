@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HelmetProvider } from "react-helmet-async";
+import { ErrorBoundary } from "@/components/error-boundary";
 import { Layout } from "@/components/layout/layout";
 import { getOrCreateSession } from "@/utils/session-manager";
 
@@ -37,28 +38,30 @@ const SessionInitializer = ({ children }: { children: React.ReactNode }) => {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <HelmetProvider>
-        <div className="w-full h-full">
-          <Router>
-            <SessionInitializer>
-              <Layout>
-                <Routes>
-                  <Route path="/" element={<Navigate to="/home" replace />} />
-                  <Route path="/home" element={<Home />} />
-                  <Route path="/i/about" element={<About />} />
-                  <Route path="/i/prompt" element={<Prompt />} />
-                  <Route path="/scripts" element={<Scripts />} />
-                  <Route path="/scripts/script" element={<Script />} />
-                  <Route path="/resources/docs" element={<Docs />} />
-                  <Route path="*" element={<Navigate to="/home" replace />} />
-                </Routes>
-              </Layout>
-            </SessionInitializer>
-          </Router>
-        </div>
-      </HelmetProvider>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <HelmetProvider>
+          <div className="w-full h-full">
+            <Router>
+              <SessionInitializer>
+                <Layout>
+                  <Routes>
+                    <Route path="/" element={<Navigate to="/home" replace />} />
+                    <Route path="/home" element={<Home />} />
+                    <Route path="/i/about" element={<About />} />
+                    <Route path="/i/prompt" element={<Prompt />} />
+                    <Route path="/scripts" element={<Scripts />} />
+                    <Route path="/scripts/script" element={<Script />} />
+                    <Route path="/resources/docs" element={<Docs />} />
+                    <Route path="*" element={<Navigate to="/home" replace />} />
+                  </Routes>
+                </Layout>
+              </SessionInitializer>
+            </Router>
+          </div>
+        </HelmetProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 

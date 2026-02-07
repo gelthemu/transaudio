@@ -2,12 +2,12 @@ import Dexie, { type EntityTable } from "dexie";
 import { StoredScript } from "@/types";
 
 class TransAudioDatabase extends Dexie {
-  runs!: EntityTable<StoredScript, "id">;
+  runs!: EntityTable<StoredScript, "task">;
 
   constructor() {
     super("transaudio");
     this.version(1).stores({
-      runs: "id, session, created",
+      runs: "task, session, timestamp",
     });
   }
 }
@@ -16,18 +16,18 @@ const db = new TransAudioDatabase();
 
 export const saveScript = async (
   session: string,
-  id: string,
+  task: string,
 ): Promise<number> => {
-  const dd = Date.now();
+  const timestamp = Date.now();
   const st: StoredScript = {
     session,
-    id,
-    created: dd,
+    task,
+    timestamp,
   };
 
   await db.runs.add(st);
 
-  return dd;
+  return timestamp;
 };
 
 export const getScriptsBySession = async (
@@ -38,22 +38,22 @@ export const getScriptsBySession = async (
   const transcripts = await db.runs
     .where("session")
     .equals(session)
-    .and((t) => t.created >= fiveDaysAgo)
+    .and((t) => t.timestamp >= fiveDaysAgo)
     .reverse()
-    .sortBy("created");
+    .sortBy("timestamp");
 
   return transcripts.slice(0, 18);
 };
 
 export const getScriptById = async (
-  id: string,
+  task: string,
 ): Promise<StoredScript | null> => {
-  const transcript = await db.runs.get(id);
+  const transcript = await db.runs.get(task);
 
   if (!transcript) return null;
 
   const fiveDaysAgo = Date.now() - 5 * 24 * 60 * 60 * 1000;
-  if (transcript.created < fiveDaysAgo) {
+  if (transcript.timestamp < fiveDaysAgo) {
     return null;
   }
 
@@ -63,12 +63,12 @@ export const getScriptById = async (
 export const cleanExpiredScripts = async (): Promise<void> => {
   const fiveDaysAgo = Date.now() - 5 * 24 * 60 * 60 * 1000;
 
-  await db.runs.where("created").below(fiveDaysAgo).delete();
+  await db.runs.where("timestamp").below(fiveDaysAgo).delete();
 };
 
 export const getAllScripts = async (): Promise<StoredScript[]> => {
   const scripts = await db.runs
-    .orderBy("created")
+    .orderBy("timestamp")
     .reverse()
     .limit(18)
     .toArray();
@@ -80,10 +80,10 @@ export const getAllActiveScripts = async (): Promise<StoredScript[]> => {
   const fiveDaysAgo = Date.now() - 5 * 24 * 60 * 60 * 1000;
 
   const transcripts = await db.runs
-    .where("created")
+    .where("timestamp")
     .aboveOrEqual(fiveDaysAgo)
     .reverse()
-    .sortBy("created");
+    .sortBy("timestamp");
 
   return transcripts.slice(0, 18);
 };
@@ -92,8 +92,8 @@ export const getScriptCount = async (): Promise<number> => {
   return await db.runs.count();
 };
 
-export const deleteScriptById = async (id: string): Promise<boolean> => {
-  const deleted = await db.runs.delete(id);
+export const deleteScriptById = async (task: string): Promise<boolean> => {
+  const deleted = await db.runs.delete(task);
   return deleted !== undefined;
 };
 
@@ -104,17 +104,17 @@ export const deleteScriptsBySession = async (
 };
 
 export const deleteMultipleScripts = async (
-  ids: string[],
+  tasks: string[],
 ): Promise<{ deleted: number; notFound: number }> => {
-  if (ids.length === 0) {
+  if (tasks.length === 0) {
     return { deleted: 0, notFound: 0 };
   }
 
-  const existing = await db.runs.bulkGet(ids);
+  const existing = await db.runs.bulkGet(tasks);
   const deleted = existing.filter((item) => item !== undefined).length;
-  const notFound = ids.length - deleted;
+  const notFound = tasks.length - deleted;
 
-  await db.runs.bulkDelete(ids);
+  await db.runs.bulkDelete(tasks);
 
   return { deleted, notFound };
 };

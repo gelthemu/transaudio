@@ -66,7 +66,7 @@ const Prompt: React.FC = () => {
 
         window.scrollTo({ top: y, behavior: "smooth" });
       }
-    }, 250);
+    }, 500);
   };
 
   const handleDrag = useCallback((e: React.DragEvent<Element>) => {
@@ -120,21 +120,21 @@ const Prompt: React.FC = () => {
       setTransAudioState("processing");
       setError(null);
 
-      const { id, session, dd } = await processTranscription(url);
+      const { task, session, timestamp } = await processTranscription(url);
 
       setTransAudioState("complete");
 
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
-      if (id) {
+      if (task) {
         await sendNotice({
           code: "6lE8y",
-          id: id,
+          task: task,
         });
       }
 
       setTimeout(() => {
-        navigate(`/scripts/script?id=${id}&ss=${session}&dd=${dd}`);
+        navigate(`/scripts/script?task=${task}&ss=${session}&dd=${timestamp}`);
       }, 500);
     } catch {
       setError("Failed. Try again");
@@ -251,6 +251,7 @@ const Prompt: React.FC = () => {
                 {inputMethod === "file" ? (
                   <FileUploadSection
                     file={file}
+                    isError={!!currentError || !!error}
                     dragActive={dragActive}
                     inputRef={inputRef}
                     onFileSelect={handleFileSelect}

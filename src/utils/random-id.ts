@@ -8,10 +8,13 @@ export const generateRandomId = (length: number = 11): string => {
 };
 
 export const cleanFileName = (fileName: string) => {
-  return fileName
-    .replace(/\.[^/.]+$/, "")
-    .replace(/[^\w\s]|_/g, " ")
-    .replace(/\s+/g, " ")
-    .toLowerCase()
-    .trim();
+  const ext = fileName.match(/\.[^/.]+$/)?.[0] || "";
+  return (
+    fileName
+      .replace(/\.[^/.]+$/, "")
+      .replace(/[^\w\s-]/g, "")
+      .replace(/\s+/g, "-")
+      .toLowerCase()
+      .trim() + ext
+  );
 };

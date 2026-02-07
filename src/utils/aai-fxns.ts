@@ -1,16 +1,10 @@
 import { UploadProgress, ScriptInfo } from "@/types";
 
-type Result = {
-  status: "success" | "failed";
-  id?: string;
-};
-type UrlResult = { status: "success"; url: string } | { status: "failed" };
-
 export async function ab3d2d3c1f7417(
   file: File,
   key: string,
   onProgress?: (progress: UploadProgress) => void,
-): Promise<UrlResult> {
+): Promise<string> {
   try {
     const response = await fetch(
       `${import.meta.env.VITE_API_URL}/v1/transaudio/adfbd7d/ab3d2d3`,
@@ -24,11 +18,11 @@ export async function ab3d2d3c1f7417(
       },
     );
 
-    if (!response.ok) return { status: "failed" };
+    if (!response.ok) return "";
 
-    const { status, url } = await response.json();
-    if (status !== "success" || !url || typeof url !== "string") {
-      return { status: "failed" };
+    const url = await response.json();
+    if (!url || typeof url !== "string") {
+      return "";
     }
 
     await new Promise<void>((resolve, reject) => {
@@ -62,13 +56,13 @@ export async function ab3d2d3c1f7417(
       xhr.send(file);
     });
 
-    return { status: "success", url: "..." };
+    return "";
   } catch {
-    return { status: "failed" };
+    return "";
   }
 }
 
-export const ab685aebf914a0 = async (key: string): Promise<UrlResult> => {
+export const ab685aebf914a0 = async (key: string): Promise<string> => {
   try {
     const response = await fetch(
       `${import.meta.env.VITE_API_URL}/v1/transaudio/adfbd7d/ab685ae`,
@@ -79,45 +73,45 @@ export const ab685aebf914a0 = async (key: string): Promise<UrlResult> => {
       },
     );
 
-    if (!response.ok) return { status: "failed" };
+    if (!response.ok) return "";
 
-    const { status, url } = await response.json();
-    if (status !== "success" || !url || typeof url !== "string") {
-      return { status: "failed" };
+    const url = await response.json();
+    if (!url || typeof url !== "string") {
+      return "";
     }
 
-    return { status: "success", url };
+    return url;
   } catch {
-    return { status: "failed" };
+    return "";
   }
 };
 
-export const ac41bedb6ec4a9 = async (audioUrl: string): Promise<Result> => {
+export const ac41bedb6ec4a9 = async (url: string): Promise<string> => {
   try {
     const start = await fetch(
       `${import.meta.env.VITE_API_URL}/v1/transaudio/adfbd7d/ac41bed`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ audioUrl }),
+        body: JSON.stringify({ url }),
       },
     );
 
-    if (!start.ok) return { status: "failed" };
+    if (!start.ok) return "";
 
-    const { status, id } = await start.json();
-    if (status !== "success" || !id) {
-      return { status: "failed" };
+    const task = await start.json();
+    if (!task) {
+      return "";
     }
 
-    return { status: "success", id };
+    return task;
   } catch {
-    return { status: "failed" };
+    return "";
   }
 };
 
 export const ad58ad087edb98 = async (
-  id: string,
+  task: string,
 ): Promise<ScriptInfo | null> => {
   try {
     const response = await fetch(
@@ -125,11 +119,11 @@ export const ad58ad087edb98 = async (
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: id }),
+        body: JSON.stringify({ task: task }),
       },
     );
 
-    if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+    if (!response.ok) return null;
 
     const result = await response.json();
     return result;

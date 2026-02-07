@@ -17,7 +17,7 @@ export const uploadFileToStorage = async (
     onProgress(progress.percentage);
   });
 
-  if (response.status !== "success") {
+  if (!response) {
     throw new Error("Failed. Please try again or contact us");
   }
 
@@ -27,20 +27,18 @@ export const uploadFileToStorage = async (
 
   await new Promise((resolve) => setTimeout(resolve, 1500));
 
-  let accessUrlResult = await ab685aebf914a0(key);
+  let url = await ab685aebf914a0(key);
 
-  if (accessUrlResult.status !== "success") {
+  if (!url) {
     await new Promise((resolve) => setTimeout(resolve, 1500));
-    accessUrlResult = await ab685aebf914a0(key);
+    url = await ab685aebf914a0(key);
 
-    if (accessUrlResult.status !== "success") {
+    if (!url) {
       throw new Error("Failed to generate access URL.");
     }
   }
 
   await new Promise((resolve) => setTimeout(resolve, 2000));
-
-  const url = accessUrlResult.url;
 
   return url;
 };
@@ -48,18 +46,17 @@ export const uploadFileToStorage = async (
 export const processTranscription = async (url: string) => {
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
-  const response = await ac41bedb6ec4a9(url);
+  const task = await ac41bedb6ec4a9(url);
 
-  if (response.status !== "success" || !response.id) {
+  if (!task) {
     throw new Error("Failed. Please try again or contact us");
   }
 
   await new Promise((resolve) => setTimeout(resolve, 3000));
 
-  const id = response.id;
   const session = getSession();
 
-  const dd = await saveScript(session, id);
+  const timestamp = await saveScript(session, task);
 
-  return { id, session, dd };
+  return { task, session, timestamp };
 };

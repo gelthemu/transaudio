@@ -32,8 +32,10 @@ export const Navbar = () => {
                 key={link.href}
                 to={link.href}
                 className={cn(
-                  "bg-transparent text-sm font-medium transition-colors",
-                  isActive(link.href) ? "" : "text-muted hover:text-dark/80",
+                  "bg-transparent text-sm transition-colors",
+                  isActive(link.href)
+                    ? "font-bold"
+                    : "font-medium text-muted hover:text-dark/80",
                 )}
               >
                 {link.label}
@@ -78,10 +80,10 @@ export const Navbar = () => {
                     to={link.href}
                     onClick={() => setMobileMenuOpen(false)}
                     className={cn(
-                      "block bg-transparent text-sm font-medium transition-colors",
+                      "block bg-transparent text-sm transition-colors",
                       isActive(link.href)
-                        ? ""
-                        : "text-muted hover:text-dark/80",
+                        ? "font-bold"
+                        : "font-medium text-muted hover:text-dark/80",
                     )}
                   >
                     {link.label}
@@ -93,10 +95,10 @@ export const Navbar = () => {
                     to={link.href}
                     onClick={() => setMobileMenuOpen(false)}
                     className={cn(
-                      "block bg-transparent text-sm font-medium transition-colors",
+                      "block bg-transparent text-sm transition-colors",
                       isActive(link.href)
-                        ? ""
-                        : "text-muted hover:text-dark/80",
+                        ? "font-bold"
+                        : "font-medium text-muted hover:text-dark/80",
                     )}
                   >
                     {link.label}
