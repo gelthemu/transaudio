@@ -6,6 +6,9 @@ dist
 *.local
 
 .vscode/*
+.dropboxignore
 .env
 
 /api
+
+pnpm-workspace.yaml
