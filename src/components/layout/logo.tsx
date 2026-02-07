@@ -26,7 +26,7 @@ export const Logo: React.FC<LogoProps> = ({ disabled }) => {
       style={{ cursor: disabled ? "default" : "pointer" }}
       onClick={handleClick}
     >
-      <span className="text-lg text-brand font-medium">Trans</span>
+      <span className="text-lg text-dark font-medium">Trans</span>
       <span className="uppercase text-lg text-[#cc0000] font-bold">Audio</span>
     </div>
   );

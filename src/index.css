@@ -5,7 +5,7 @@
 @layer base {
   :root {
     --color-dark: 26 28 30;
-    --color-light: 242 242 242;
+    --color-light: 247 249 247;
     --color-brand: 52 69 101;
     --color-accent: 150 165 176;
     --color-surface: 205 213 229;
@@ -17,7 +17,7 @@
 
   /* :root {
     --color-dark: #1a1c1e;
-    --color-light: ##f2f2f2;
+    --color-light: #f7f9fa;
     --color-brand: #344565;
     --color-accent: #96a5b0;
     --color-surface: #cdd5e5;
