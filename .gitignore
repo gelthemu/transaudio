@@ -9,6 +9,4 @@ dist
 .dropboxignore
 .env
 
-/api
-
 pnpm-workspace.yaml
