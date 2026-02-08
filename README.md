@@ -2,4 +2,4 @@
 
 > TransAUDIO is your go-to web app for seamless speech-to-text conversion.
 
-TO BE COMPLETED...
+TO BE COMPLETED . . .
