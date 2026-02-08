@@ -14,6 +14,7 @@ export async function ab3d2d3c1f7417(
         body: JSON.stringify({
           key,
           contentType: file.type,
+          fileSize: file.size,
         }),
       },
     );
